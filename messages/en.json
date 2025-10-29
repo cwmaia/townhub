@@ -1,0 +1,89 @@
+{
+  "app": {
+    "title": "TownHub Stykkishólmur",
+    "description": "Discover services, stays, restaurants, attractions and events in Stykkishólmur, Iceland."
+  },
+  "header": {
+    "profileMenu": {
+      "signIn": "Sign in",
+      "signOut": "Sign out",
+      "admin": "Admin dashboard"
+    },
+    "language": {
+      "label": "Language",
+      "en": "English",
+      "is": "Íslenska"
+    }
+  },
+  "hero": {
+    "welcome": "Welcome to {town}!",
+    "welcomeWithName": "Welcome to {town}, {name}!",
+    "question": "How can we help you today?"
+  },
+  "tabs": {
+    "all": "All",
+    "services": "Town Services",
+    "lodging": "Lodging",
+    "restaurants": "Restaurants",
+    "attractions": "Attractions",
+    "fromHere": "From Here To"
+  },
+  "events": {
+    "title": "Happening in Stykkishólmur",
+    "viewDetails": "View details",
+    "close": "Close",
+    "starts": "Starts",
+    "ends": "Ends"
+  },
+  "filters": {
+    "title": "Filters",
+    "rating": "Minimum rating",
+    "distance": "Distance from center",
+    "price": "Price range",
+    "tags": "Tags",
+    "reset": "Reset",
+    "kmOption": "{from}–{to} km",
+    "lessThanKm": "Under {to} km",
+    "moreThanKm": "Over {from} km"
+  },
+  "results": {
+    "visitWebsite": "Visit Website",
+    "loadMore": "Load more",
+    "empty": "No places match your filters yet."
+  },
+  "sticky": {
+    "welcomeTitle": "Welcome to Stykkishólmur",
+    "welcomeDescription": "A charming harbor town on the Snæfellsnes Peninsula, known for its colorful houses, fresh seafood, and quick access to Breiðafjörður islands.",
+    "weatherTitle": "Weather now",
+    "weatherFeels": "Wind {wind} m/s"
+  },
+  "fromHereTo": {
+    "title": "From Stykkishólmur to…",
+    "customLabel": "Add another destination",
+    "placeholder": "Enter a place or address",
+    "cta": "Check distance",
+    "transport": {
+      "car": "By car",
+      "transit": "Transit",
+      "walk": "Walk"
+    },
+    "distance": "{km} km away",
+    "duration": "{minutes} min",
+    "fallback": "Distance unavailable"
+  },
+  "admin": {
+    "title": "Admin",
+    "places": "Places",
+    "events": "Events",
+    "create": "Create new",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "auth": {
+    "signInHeading": "Sign in with email",
+    "magicLink": "Send magic link",
+    "emailPlaceholder": "your@email.com"
+  }
+}

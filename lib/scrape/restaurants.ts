@@ -1,0 +1,106 @@
+import type { ScrapedPlace } from "./places";
+
+export const getRestaurants = (): ScrapedPlace[] => [
+  {
+    name: "Narfeyrarstofa Bistro",
+    type: "RESTAURANT",
+    description:
+      "Cozy harbor bistro serving langoustine soup, slow-cooked lamb, and specialties sourced from Breiðafjörður.",
+    address: "Aðalgata 3, 340 Stykkishólmur, Iceland",
+    website: "https://narfeyrarstofa.is",
+    phone: "+354 438 1119",
+    imageUrl: "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800",
+    tags: ["Seafood", "Local", "$$"],
+    rating: 4.6,
+    ratingCount: 522,
+  },
+  {
+    name: "Skúli Craft Bar & Bistro",
+    type: "RESTAURANT",
+    description:
+      "Casual bar with Icelandic craft beers, hearty burgers, and harbor views from the historic merchant house.",
+    address: "Hafnargata 4, 340 Stykkishólmur, Iceland",
+    imageUrl: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=800",
+    tags: ["Bistro", "Craft Beer", "$"],
+    rating: 4.4,
+    ratingCount: 241,
+  },
+  {
+    name: "Sjávarpakkhúsið",
+    type: "RESTAURANT",
+    description:
+      "Seasonal tasting menus celebrating fresh shellfish and vegetables grown on nearby islands.",
+    address: "Aðalgata 2, 340 Stykkishólmur, Iceland",
+    website: "https://sjavarpakkhusid.is",
+    imageUrl: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=800",
+    tags: ["Tasting Menu", "Fine Dining", "$$$"],
+    rating: 4.7,
+    ratingCount: 389,
+  },
+  {
+    name: "Narfeyrarkaffi",
+    type: "RESTAURANT",
+    description:
+      "Cozy café serving homemade cakes, pastries, and light meals in a warm, welcoming atmosphere.",
+    address: "Aðalgata, 340 Stykkishólmur, Iceland",
+    imageUrl: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=800",
+    tags: ["Cafe", "Bakery", "$"],
+    rating: 4.5,
+    ratingCount: 156,
+  },
+  {
+    name: "Stykkishólmur Bakery",
+    type: "RESTAURANT",
+    description:
+      "Local bakery offering freshly baked bread, pastries, and cakes daily. Perfect for breakfast or a quick snack.",
+    address: "Aðalgata, 340 Stykkishólmur, Iceland",
+    imageUrl: "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=800",
+    tags: ["Bakery", "Breakfast", "$"],
+    rating: 4.3,
+    ratingCount: 98,
+  },
+  {
+    name: "Skipper Restaurant",
+    type: "RESTAURANT",
+    description:
+      "Authentic Icelandic seafood restaurant featuring fresh fish dishes from local fishermen with harbor views.",
+    address: "Hafnargata, 340 Stykkishólmur, Iceland",
+    imageUrl: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?q=80&w=800",
+    tags: ["Seafood", "Harbor View", "$$"],
+    rating: 4.4,
+    ratingCount: 213,
+  },
+  {
+    name: "Café Sjávarborg",
+    type: "RESTAURANT",
+    description:
+      "Cozy café offering coffee, homemade cakes, soup of the day, wraps and drinks with a friendly atmosphere.",
+    address: "Hafnargata, 340 Stykkishólmur, Iceland",
+    imageUrl: "https://images.unsplash.com/photo-1559305616-3fca9a430d1e?q=80&w=800",
+    tags: ["Cafe", "Light Meals", "$"],
+    rating: 4.2,
+    ratingCount: 124,
+  },
+  {
+    name: "Skurinn",
+    type: "RESTAURANT",
+    description:
+      "Casual eatery serving burgers, wings and pizzas. Great for a quick, satisfying meal.",
+    address: "Stykkishólmur, Iceland",
+    imageUrl: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800",
+    tags: ["Fast Food", "Pizza", "$"],
+    rating: 4.0,
+    ratingCount: 87,
+  },
+  {
+    name: "Hafnarvagninn",
+    type: "RESTAURANT",
+    description:
+      "Classic fish and chips with stunning harbor views. Perfect for a casual waterfront meal.",
+    address: "Hafnargata, 340 Stykkishólmur, Iceland",
+    imageUrl: "https://images.unsplash.com/photo-1580217593608-61931cefc821?q=80&w=800",
+    tags: ["Fish & Chips", "Harbor View", "$"],
+    rating: 4.1,
+    ratingCount: 102,
+  },
+];

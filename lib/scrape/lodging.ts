@@ -1,0 +1,105 @@
+import type { ScrapedPlace } from "./places";
+
+export const getLodging = (): ScrapedPlace[] => [
+  {
+    name: "Hotel Stykkishólmur",
+    type: "LODGING",
+    description:
+      "Modern harborfront hotel with panoramic views, restaurant, and spacious rooms inspired by Snæfellsnes colors.",
+    address: "Borgarbraut 8, 340 Stykkishólmur, Iceland",
+    website: "https://hotelstykkisholmur.is",
+    phone: "+354 430 2100",
+    imageUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800",
+    priceRange: "ISK 28,000–46,000",
+    tags: ["Hotel", "Breakfast", "$$"],
+    rating: 4.2,
+    ratingCount: 418,
+  },
+  {
+    name: "Fosshótel Stykkishólmur",
+    type: "LODGING",
+    description:
+      "Comfortable countryside hotel offering sea-view rooms, local cuisine, and tour assistance on Snæfellsnes.",
+    address: "Borgarbraut 8, 340 Stykkishólmur, Iceland",
+    website: "https://fosshotel.is",
+    phone: "+354 456 5100",
+    imageUrl: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800",
+    priceRange: "ISK 24,000–49,000",
+    tags: ["Hotel", "Seaside", "$$$"],
+    rating: 4.1,
+    ratingCount: 362,
+  },
+  {
+    name: "Our Guesthouse",
+    type: "LODGING",
+    description:
+      "Family-run guesthouse with cozy harbor-view rooms, shared kitchen, and personalized local recommendations.",
+    address: "Hafnargata 6, 340 Stykkishólmur, Iceland",
+    website: "https://ourguesthouse.is",
+    imageUrl: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=800",
+    tags: ["Guesthouse", "Harbor", "$"],
+    priceRange: "ISK 21,000–33,000",
+    rating: 4.8,
+    ratingCount: 134,
+  },
+  {
+    name: "Hotel Egilsen",
+    type: "LODGING",
+    description:
+      "Boutique hotel in a historic house with stylish rooms, eco-friendly beds, and modern amenities in the heart of Stykkishólmur.",
+    address: "Aðalgata, 340 Stykkishólmur, Iceland",
+    imageUrl: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=800",
+    priceRange: "ISK 32,000–52,000",
+    tags: ["Boutique", "Historic", "$$$"],
+    rating: 4.7,
+    ratingCount: 287,
+  },
+  {
+    name: "Hótel Fransiskus Stykkishólmi",
+    type: "LODGING",
+    description:
+      "3-star accommodation offering complimentary buffet breakfast, a snack bar, and a comfortable lounge area.",
+    address: "Stykkishólmur, Iceland",
+    imageUrl: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=800",
+    priceRange: "ISK 26,000–44,000",
+    tags: ["Hotel", "Breakfast", "$$"],
+    rating: 4.3,
+    ratingCount: 195,
+  },
+  {
+    name: "Sjavarborg Guesthouse",
+    type: "LODGING",
+    description:
+      "Affordable and cozy guesthouse with stunning fjord views and shared kitchen facilities perfect for budget travelers.",
+    address: "Hafnargata, 340 Stykkishólmur, Iceland",
+    imageUrl: "https://images.unsplash.com/photo-1455587734955-081b22074882?q=80&w=800",
+    priceRange: "ISK 18,000–29,000",
+    tags: ["Guesthouse", "Budget", "$"],
+    rating: 4.6,
+    ratingCount: 143,
+  },
+  {
+    name: "Akkeri Guesthouse",
+    type: "LODGING",
+    description:
+      "6-room guesthouse in the heart of the old town, with each room offering either a balcony or a terrace.",
+    address: "Stykkishólmur Old Town, Iceland",
+    imageUrl: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?q=80&w=800",
+    priceRange: "ISK 22,000–36,000",
+    tags: ["Guesthouse", "Old Town", "$$"],
+    rating: 4.5,
+    ratingCount: 112,
+  },
+  {
+    name: "Hotel Karolina",
+    type: "LODGING",
+    description:
+      "Modern guesthouse with elegant decor and incredible harbor views. Also known as Syslo Guesthouse.",
+    address: "Hafnargata, 340 Stykkishólmur, Iceland",
+    imageUrl: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=800",
+    priceRange: "ISK 24,000–38,000",
+    tags: ["Guesthouse", "Harbor View", "$$"],
+    rating: 4.4,
+    ratingCount: 168,
+  },
+];

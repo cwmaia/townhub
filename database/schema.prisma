@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PlaceType {
+  TOWN_SERVICE
+  LODGING
+  RESTAURANT
+  ATTRACTION
+}
+
+model Place {
+  id          String    @id @default(cuid())
+  name        String
+  type        PlaceType
+  description String    @default("")
+  website     String?
+  phone       String?
+  address     String?
+  lat         Float?
+  lng         Float?
+  distanceKm  Float?
+  rating      Float?
+  ratingCount Int?
+  imageUrl    String?
+  tags        String[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  priceRange  String?
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  imageUrl    String?
+  startsAt    DateTime?
+  endsAt      DateTime?
+  location    String?
+  createdAt   DateTime  @default(now())
+}
+
+model Profile {
+  id        String  @id @default(cuid())
+  userId    String  @unique
+  firstName String?
+  avatarUrl String?
+  role      String  @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

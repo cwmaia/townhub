@@ -1,0 +1,89 @@
+{
+  "app": {
+    "title": "TownHub Stykkishólmur",
+    "description": "Upplifðu þjónustu, gistingu, veitingastaði, aðdráttarafl og viðburði í Stykkishólmi."
+  },
+  "header": {
+    "profileMenu": {
+      "signIn": "Skrá inn",
+      "signOut": "Skrá út",
+      "admin": "Stjórnborð"
+    },
+    "language": {
+      "label": "Tungumál",
+      "en": "English",
+      "is": "Íslenska"
+    }
+  },
+  "hero": {
+    "welcome": "Velkomin til {town}!",
+    "welcomeWithName": "Velkomin til {town}, {name}!",
+    "question": "Hvernig getum við aðstoðað þig í dag?"
+  },
+  "tabs": {
+    "all": "Allt",
+    "services": "Þjónusta bæjarins",
+    "lodging": "Gisting",
+    "restaurants": "Veitingastaðir",
+    "attractions": "Aðdráttarafl",
+    "fromHere": "Héðan til"
+  },
+  "events": {
+    "title": "Það sem gerist í Stykkishólmi",
+    "viewDetails": "Sjá nánar",
+    "close": "Loka",
+    "starts": "Hefst",
+    "ends": "Lýkur"
+  },
+  "filters": {
+    "title": "Sía",
+    "rating": "Lágmarks einkunn",
+    "distance": "Fjarlægð frá miðbæ",
+    "price": "Verðbil",
+    "tags": "Efnisorð",
+    "reset": "Hreinsa",
+    "kmOption": "{from}–{to} km",
+    "lessThanKm": "Innan við {to} km",
+    "moreThanKm": "Yfir {from} km"
+  },
+  "results": {
+    "visitWebsite": "Heimsækja vef",
+    "loadMore": "Hlaða fleiri",
+    "empty": "Engir staðir passa við valdar síur."
+  },
+  "sticky": {
+    "welcomeTitle": "Velkomin til Stykkishólms",
+    "welcomeDescription": "Litríkur sjávarbær á Snæfellsnesi, þekktur fyrir ferskan sjávarfang, menningu og aðgang að eyjum Breiðafjarðar.",
+    "weatherTitle": "Veðrið núna",
+    "weatherFeels": "Vindur {wind} m/s"
+  },
+  "fromHereTo": {
+    "title": "Frá Stykkishólmi til…",
+    "customLabel": "Bæta við áfangastað",
+    "placeholder": "Sláðu inn stað eða heimilisfang",
+    "cta": "Reikna fjarlægð",
+    "transport": {
+      "car": "Með bíl",
+      "transit": "Strætó",
+      "walk": "Gangandi"
+    },
+    "distance": "{km} km í burtu",
+    "duration": "{minutes} mínútur",
+    "fallback": "Ekki tókst að reikna fjarlægð"
+  },
+  "admin": {
+    "title": "Stjórnun",
+    "places": "Staðir",
+    "events": "Viðburðir",
+    "create": "Búa til",
+    "edit": "Breyta",
+    "delete": "Eyða",
+    "save": "Vista",
+    "cancel": "Hætta við"
+  },
+  "auth": {
+    "signInHeading": "Skrá inn með tölvupósti",
+    "magicLink": "Senda töfrahlekk",
+    "emailPlaceholder": "netfang@dæmi.is"
+  }
+}
