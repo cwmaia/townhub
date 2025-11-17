@@ -2,6 +2,7 @@ import "server-only";
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { randomUUID } from "crypto";
 import { SubscriptionTarget, UserRole } from "@prisma/client";
 import { prisma } from "../../../../../lib/db";
 import { locales, type AppLocale } from "../../../../../lib/i18n";
@@ -19,6 +20,8 @@ import { Badge } from "../../../../../components/ui/badge";
 import { slugify } from "../../../../../lib/utils";
 import { requireRole } from "../../../../../lib/auth/guards";
 import { resolveAdminTownContext } from "../helpers";
+import { ImageUploadInput } from "../../../(components)/admin/ImageUploadInput";
+import { CopyButton } from "../../../(components)/admin/CopyButton";
 
 type BusinessesPageProps = {
   params: Promise<{ locale: AppLocale }>;
@@ -142,6 +145,37 @@ const deleteBusinessAction = async (formData: FormData) => {
   revalidatePath(`/${locale}/admin/businesses`);
 };
 
+const createClaimLinkAction = async (formData: FormData) => {
+  "use server";
+  const locale = formData.get("locale")?.toString() ?? "en";
+  const businessId = formData.get("businessId")?.toString();
+  if (!businessId) return;
+
+  const ownerEmail = formData.get("ownerEmail")?.toString().trim() || null;
+  const { townId } = await resolveAdminTownContext(formData);
+
+  const token = randomUUID();
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  await prisma.businessClaim.create({
+    data: {
+      businessId,
+      email: ownerEmail,
+      token,
+      expiresAt,
+    },
+  });
+
+  await prisma.business.update({
+    where: { id: businessId, townId },
+    data: {
+      pendingOwnerEmail: ownerEmail,
+    },
+  });
+
+  revalidatePath(`/${locale}/admin/businesses`);
+};
+
 export default async function BusinessesPage({ params }: BusinessesPageProps) {
   const { locale } = await params;
   if (!locales.includes(locale)) {
@@ -167,6 +201,7 @@ export default async function BusinessesPage({ params }: BusinessesPageProps) {
   }
 
   const currentTown = towns.find((town) => town.id === townId) ?? towns[0];
+  const now = new Date();
 
   const [subscriptions, places, businesses] = await Promise.all([
     prisma.subscription.findMany({
@@ -182,6 +217,14 @@ export default async function BusinessesPage({ params }: BusinessesPageProps) {
       where: { townId },
       include: {
         subscription: true,
+        claims: {
+          where: {
+            claimedAt: null,
+            OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+          },
+          orderBy: { createdAt: "desc" },
+          take: 1,
+        },
       },
       orderBy: { createdAt: "desc" },
     }),
@@ -251,23 +294,26 @@ export default async function BusinessesPage({ params }: BusinessesPageProps) {
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700" htmlFor="logo">
-              Logo URL
-            </label>
-            <Input id="logo" name="logoUrl" placeholder="https://..." />
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700" htmlFor="hero">
-              Hero image URL
-            </label>
-            <Input id="hero" name="heroImageUrl" placeholder="https://..." />
-          </div>
-          <div className="md:col-span-2 space-y-2">
-            <label className="text-sm font-medium text-slate-700" htmlFor="gallery">
-              Gallery URLs (comma separated)
-            </label>
-            <Input id="gallery" name="galleryUrls" placeholder="https://img1.jpg, https://img2.jpg" />
+          <ImageUploadInput
+            label="Logo"
+            name="logoUrl"
+            folder={`towns/${townId}/businesses/logos`}
+            helperText="Square image, at least 256x256."
+          />
+          <ImageUploadInput
+            label="Hero image"
+            name="heroImageUrl"
+            folder={`towns/${townId}/businesses/hero`}
+            helperText="Wide image for feature spots."
+          />
+          <div className="md:col-span-2">
+            <ImageUploadInput
+              label="Gallery"
+              name="galleryUrls"
+              folder={`towns/${townId}/businesses/gallery`}
+              multiple
+              helperText="Upload multiple images to showcase the business."
+            />
           </div>
           <div className="md:col-span-2 space-y-2">
             <label className="text-sm font-medium text-slate-700" htmlFor="short-description">
@@ -379,11 +425,11 @@ export default async function BusinessesPage({ params }: BusinessesPageProps) {
                 </div>
               </form>
 
-              <div className="mt-4 grid gap-3 text-sm text-slate-500 md:grid-cols-3">
-                <p>
-                  Notification quota:{" "}
-                  <span className="font-semibold text-slate-900">
-                    {business.notificationUsage}/{business.monthlyNotificationLimit ?? "—"}
+          <div className="mt-4 grid gap-3 text-sm text-slate-500 md:grid-cols-3">
+            <p>
+              Notification quota:{" "}
+              <span className="font-semibold text-slate-900">
+                {business.notificationUsage}/{business.monthlyNotificationLimit ?? "—"}
                   </span>
                 </p>
                 <p>
@@ -397,13 +443,67 @@ export default async function BusinessesPage({ params }: BusinessesPageProps) {
                   <span className="font-semibold text-slate-900">
                     {places.find((p) => p.id === business.placeId)?.name ?? "None"}
                   </span>
-                </p>
+            </p>
+          </div>
+
+          <div className="mt-4 rounded-2xl bg-slate-50 p-4">
+            <p className="text-sm font-semibold text-slate-900">Owner access</p>
+            <p className="text-xs text-slate-500">
+              Invite a business owner to claim their profile and manage notifications.
+            </p>
+            <form
+              action={createClaimLinkAction}
+              className="mt-3 flex flex-col gap-2 md:flex-row"
+            >
+              <input type="hidden" name="locale" value={locale} />
+              <input type="hidden" name="townId" value={townId} />
+              <input type="hidden" name="businessId" value={business.id} />
+              <Input
+                name="ownerEmail"
+                placeholder="owner@business.is"
+                defaultValue={business.pendingOwnerEmail ?? ""}
+              />
+              <Button type="submit" className="rounded-full">
+                Generate claim link
+              </Button>
+            </form>
+            {business.claims[0] ? (
+              <div className="mt-3 space-y-1 text-xs text-slate-600">
+                <span>
+                  Latest invite (expires{" "}
+                  {business.claims[0].expiresAt
+                    ? business.claims[0].expiresAt.toLocaleDateString()
+                    : "N/A"}
+                  ):
+                </span>
+                <div className="flex items-center gap-2">
+                  {(() => {
+                    const token = business.claims[0].token;
+                    const baseUrl =
+                      process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "";
+                    const relativeLink = `/${locale}/claim-business?token=${token}`;
+                    const displayLink = baseUrl
+                      ? `${baseUrl}${relativeLink}`
+                      : relativeLink;
+
+                    return (
+                      <>
+                        <code className="flex-1 break-all rounded bg-white px-2 py-1 text-[11px] text-slate-800">
+                          {displayLink}
+                        </code>
+                        <CopyButton text={displayLink} />
+                      </>
+                    );
+                  })()}
+                </div>
               </div>
-            </div>
-          ))}
-          {!businesses.length ? (
-            <p className="text-sm text-slate-500">No businesses registered yet.</p>
-          ) : null}
+            ) : null}
+          </div>
+        </div>
+      ))}
+      {!businesses.length ? (
+        <p className="text-sm text-slate-500">No businesses registered yet.</p>
+      ) : null}
         </div>
       </section>
     </div>

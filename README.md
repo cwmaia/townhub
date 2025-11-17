@@ -136,6 +136,8 @@ Edit `.env.local` and fill in your values:
 DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/townhub"
 SUPABASE_URL="your-supabase-project-url"
 SUPABASE_ANON_KEY="your-supabase-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-supabase-service-key"
+SUPABASE_STORAGE_BUCKET="townapp-media"
 ADMIN_EMAILS="your-email@example.com"
 TOWN_ADMIN_EMAILS="stykkish-town-admin@example.com"
 

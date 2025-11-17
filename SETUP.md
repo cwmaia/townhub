@@ -214,6 +214,8 @@ townhub/
 - `DATABASE_URL` - PostgreSQL connection string
 - `SUPABASE_URL` - Your Supabase project URL
 - `SUPABASE_ANON_KEY` - Supabase anonymous key
+- `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key (used for server-side uploads)
+- `SUPABASE_STORAGE_BUCKET` - Supabase Storage bucket for media assets
 - `ADMIN_EMAILS` - Comma-separated admin emails
 - `TOWN_ADMIN_EMAILS` - Comma-separated emails for town-scoped admins
 

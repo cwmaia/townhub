@@ -55,8 +55,9 @@ Create a multi-tenant CMS/control plane for TownApp that powers:
 
 ### Phase B – Business Management & Media
 - [x] Admin UI to create/edit businesses manually (contact info, tier, quota).
-- [ ] Image management (logo, hero, gallery, event images) using Supabase Storage.
+- [x] Image management (logo, hero, gallery, event images) using Supabase Storage.
 - [x] Link businesses to Places; enforce “one place per business” where needed.
+- [x] Owner invitation flow so business accounts can be claimed later.
 
 ### Phase C – Notification Center
 - [ ] Notification composer (title, body, deeplink, language toggles, targeting).
@@ -83,7 +84,8 @@ Create a multi-tenant CMS/control plane for TownApp that powers:
 | 2025-11-17        | Plan created | Defined roles, pricing tiers, delivery phases, and storage/notification decisions. |
 | 2025-11-17        | Phase A schema & seed updates | Added Town + Invoice models, role enum, translation/media fields, notification metadata, and seeded Stykkishólmur + business tiers. |
 | 2025-11-17        | Role guards + admin shell | Added shared auth helpers, environment docs, and the new `/admin` layout + navigation with lint fixes. |
-| 2025-11-17        | Phase B – Business management | Added `/admin/businesses` with create/update/delete server actions, town-scoped helpers, and place/ subscription linking. |
+| 2025-11-17        | Phase B – Business management | Added `/admin/businesses`, Supabase Storage uploads, and server actions for create/update/delete with place + tier linking. |
+| 2025-11-17        | Notification shell | Shipped `/admin/notifications` with stats, draft creation server action, and town-scoped history list (Phase C groundwork). |
 
 > Add a new row for every meaningful update (feature completed, schema change, etc.) to keep historical context.
 

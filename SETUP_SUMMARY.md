@@ -30,6 +30,8 @@ GOOGLE_DISTANCE_MATRIX_API_KEY="AIzaSyA3MSCsqQr282qPM52kjTCiHp8VQT91XNQ"
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL="https://magtuguppyucsxbxdpuh.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+SUPABASE_SERVICE_ROLE_KEY="service-role-key"
+SUPABASE_STORAGE_BUCKET="townapp-media"
 
 # Database
 DATABASE_URL="postgresql://postgres.magtuguppyucsxbxdpuh:Cwm1980%21%40%23%24%25@aws-1-eu-north-1.pooler.supabase.com:5432/postgres"

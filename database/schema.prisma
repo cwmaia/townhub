@@ -132,40 +132,42 @@ model Profile {
 }
 
 model Business {
-  id                       String         @id @default(cuid())
+  id                       String          @id @default(cuid())
   name                     String
-  slug                     String?        @unique
-  userId                   String?        @unique
-  user                     Profile?       @relation(fields: [userId], references: [id])
-  placeId                  String?        @unique
-  place                    Place?         @relation(fields: [placeId], references: [id])
+  slug                     String?         @unique
+  userId                   String?         @unique
+  user                     Profile?        @relation(fields: [userId], references: [id])
+  placeId                  String?         @unique
+  place                    Place?          @relation(fields: [placeId], references: [id])
   subscriptionId           String?
-  subscription             Subscription?  @relation(fields: [subscriptionId], references: [id])
+  subscription             Subscription?   @relation(fields: [subscriptionId], references: [id])
   townId                   String?
-  town                     Town?          @relation(fields: [townId], references: [id])
+  town                     Town?           @relation(fields: [townId], references: [id])
   logoUrl                  String?
   heroImageUrl             String?
-  galleryUrls              String[]       @default([])
+  galleryUrls              String[]        @default([])
   shortDescription         String?
   longDescription          String?
-  descriptionTranslations  Json?          @default("{}")
+  descriptionTranslations  Json?           @default("{}")
   contactEmail             String?
   contactPhone             String?
-  notificationQuota        Int            @default(0)
-  quotaUsed                Int            @default(0)
+  pendingOwnerEmail        String?
+  notificationQuota        Int             @default(0)
+  quotaUsed                Int             @default(0)
   quotaResetAt             DateTime
   monthlyNotificationLimit Int?
   monthlyEventLimit        Int?
-  notificationUsage        Int            @default(0)
-  eventUsage               Int            @default(0)
+  notificationUsage        Int             @default(0)
+  eventUsage               Int             @default(0)
   usageResetsAt            DateTime?
-  status                   String         @default("pending")
+  status                   String          @default("pending")
   payments                 Payment[]
   invoices                 Invoice[]
   notifications            Notification[]
-  events                   Event[]        @relation("BusinessEvents")
-  createdAt                DateTime       @default(now())
-  updatedAt                DateTime       @updatedAt
+  events                   Event[]         @relation("BusinessEvents")
+  claims                   BusinessClaim[]
+  createdAt                DateTime        @default(now())
+  updatedAt                DateTime        @updatedAt
 }
 
 model Subscription {
@@ -279,4 +281,15 @@ model DeviceToken {
   lastUsedAt DateTime @default(now())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model BusinessClaim {
+  id         String    @id @default(cuid())
+  businessId String
+  business   Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  email      String?
+  token      String    @unique
+  expiresAt  DateTime?
+  claimedAt  DateTime?
+  createdAt  DateTime  @default(now())
 }
