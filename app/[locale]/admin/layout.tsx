@@ -73,8 +73,6 @@ export default async function AdminLayout({ children, params }: AdminLayoutProps
       label: "Businesses",
       href: `${basePath}/businesses`,
       roles: [UserRole.SUPER_ADMIN, UserRole.TOWN_ADMIN],
-      disabled: true,
-      badge: "soon",
     },
     {
       label: "Notifications",

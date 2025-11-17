@@ -10,33 +10,13 @@ import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
 import { requireRole } from "../../../lib/auth/guards";
+import { resolveAdminTownContext } from "./helpers";
 
 const PLACE_TYPES = Object.values(PlaceType);
 
 type AdminPageProps = {
   params: Promise<{ locale: AppLocale }>;
 };
-
-const ADMIN_ACTION_ROLES = [UserRole.SUPER_ADMIN, UserRole.TOWN_ADMIN] as const;
-
-async function resolveTownContext(formData?: FormData) {
-  const auth = await requireRole(ADMIN_ACTION_ROLES);
-  if (!auth) {
-    throw new Error("Unauthorized");
-  }
-
-  const townIdFromForm = formData?.get("townId")?.toString() ?? null;
-  const townId =
-    auth.profile.role === UserRole.SUPER_ADMIN
-      ? townIdFromForm
-      : auth.profile.townId ?? townIdFromForm;
-
-  if (!townId) {
-    throw new Error("Missing town context");
-  }
-
-  return { auth, townId };
-}
 
 const createPlaceAction = async (formData: FormData) => {
   "use server";
@@ -55,7 +35,7 @@ const createPlaceAction = async (formData: FormData) => {
 
   if (!name || !type) return;
 
-  const { townId } = await resolveTownContext(formData);
+  const { townId } = await resolveAdminTownContext(formData);
 
   await prisma.place.create({
     data: {
@@ -86,7 +66,7 @@ const updatePlaceAction = async (formData: FormData) => {
     .map((tag) => tag.trim())
     .filter(Boolean);
 
-  await resolveTownContext(formData);
+  await resolveAdminTownContext(formData);
 
   await prisma.place.update({
     where: { id },
@@ -105,7 +85,7 @@ const deletePlaceAction = async (formData: FormData) => {
   const id = formData.get("id")?.toString();
   if (!id) return;
 
-  await resolveTownContext(formData);
+  await resolveAdminTownContext(formData);
 
   await prisma.place.delete({
     where: { id },
@@ -126,7 +106,7 @@ const createEventAction = async (formData: FormData) => {
 
   if (!title) return;
 
-  const { townId } = await resolveTownContext(formData);
+  const { townId } = await resolveAdminTownContext(formData);
 
   await prisma.event.create({
     data: {
@@ -149,7 +129,7 @@ const deleteEventAction = async (formData: FormData) => {
   const id = formData.get("id")?.toString();
   if (!id) return;
 
-  await resolveTownContext(formData);
+  await resolveAdminTownContext(formData);
 
   await prisma.event.delete({ where: { id } });
   revalidatePath(`/${locale}/admin`);
