@@ -77,7 +77,7 @@ const WeatherWidget = ({ weather, auroraData, townCenter }: WeatherWidgetProps) 
           {weather.daily && weather.daily.length > 0 && (
             <div className="mt-1.5 pt-1.5 border-t border-primary/10">
               <div className="grid grid-cols-3 gap-1">
-                {weather.daily.map((day, index) => {
+                {weather.daily.map((day) => {
                   const date = new Date(day.date);
                   const dayName = date.toLocaleDateString('en', { weekday: 'short' });
 

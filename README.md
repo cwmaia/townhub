@@ -137,6 +137,7 @@ DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/townhub"
 SUPABASE_URL="your-supabase-project-url"
 SUPABASE_ANON_KEY="your-supabase-anon-key"
 ADMIN_EMAILS="your-email@example.com"
+TOWN_ADMIN_EMAILS="stykkish-town-admin@example.com"
 
 # Optional but recommended
 GOOGLE_MAPS_API_KEY="your-google-maps-key"
@@ -189,7 +190,7 @@ Locale-prefixed routes are available:
 
 ## Admin Access
 
-Users whose email addresses match `ADMIN_EMAILS` will be promoted to admin on seed or first login. Admins can manage places and events from `/en/admin` (or `/is/admin`). Authentication uses Supabase magic links.
+Emails listed in `ADMIN_EMAILS` become **super admins** with full access. Emails in `TOWN_ADMIN_EMAILS` become **town admins** scoped to Stykkishólmur (or their assigned town). Admins can manage places and events from `/en/admin` (or `/is/admin`). Authentication uses Supabase magic links.
 
 ## Scripts
 

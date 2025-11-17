@@ -14,43 +14,269 @@ enum PlaceType {
   ATTRACTION
 }
 
+enum UserRole {
+  SUPER_ADMIN
+  TOWN_ADMIN
+  BUSINESS_OWNER
+  CONTENT_MANAGER
+  USER
+}
+
+enum SubscriptionTarget {
+  TOWN
+  BUSINESS
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  PAID
+  OVERDUE
+  VOID
+}
+
+enum InvoiceType {
+  TOWN_LICENSE
+  BUSINESS_SUBSCRIPTION
+  OVERAGE
+  ADJUSTMENT
+}
+
+model Town {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  description   String?
+  defaultLocale String   @default("en")
+  currency      String   @default("ISK")
+  timezone      String   @default("Atlantic/Reykjavik")
+  latitude      Float?
+  longitude     Float?
+  licenseFee    Float    @default(95000)
+  heroImageUrl  String?
+  logoUrl       String?
+  settings      Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  places        Place[]
+  events        Event[]
+  businesses    Business[]
+  profiles      Profile[]
+  notifications Notification[]
+  invoices      Invoice[]
+}
+
 model Place {
-  id          String    @id @default(cuid())
-  name        String
-  type        PlaceType
-  description String    @default("")
-  website     String?
-  phone       String?
-  address     String?
-  lat         Float?
-  lng         Float?
-  distanceKm  Float?
-  rating      Float?
-  ratingCount Int?
-  imageUrl    String?
-  tags        String[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  priceRange  String?
+  id                      String    @id @default(cuid())
+  name                    String
+  type                    PlaceType
+  description             String    @default("")
+  website                 String?
+  phone                   String?
+  address                 String?
+  lat                     Float?
+  lng                     Float?
+  distanceKm              Float?
+  rating                  Float?
+  ratingCount             Int?
+  imageUrl                String?
+  featuredImageUrl        String?
+  galleryUrls             String[]  @default([])
+  tags                    String[]
+  nameTranslations        Json?     @default("{}")
+  descriptionTranslations Json?     @default("{}")
+  slug                    String?   @unique
+  townId                  String?
+  town                    Town?     @relation(fields: [townId], references: [id])
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  priceRange              String?
+  business                Business?
 }
 
 model Event {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  imageUrl    String?
-  startsAt    DateTime?
-  endsAt      DateTime?
-  location    String?
-  createdAt   DateTime  @default(now())
+  id                      String    @id @default(cuid())
+  title                   String
+  description             String
+  imageUrl                String?
+  startsAt                DateTime?
+  endsAt                  DateTime?
+  location                String?
+  titleTranslations       Json?     @default("{}")
+  descriptionTranslations Json?     @default("{}")
+  galleryUrls             String[]  @default([])
+  businessId              String?
+  business                Business? @relation("BusinessEvents", fields: [businessId], references: [id])
+  townId                  String?
+  town                    Town?     @relation(fields: [townId], references: [id])
+  createdAt               DateTime  @default(now())
 }
 
 model Profile {
-  id        String  @id @default(cuid())
-  userId    String  @unique
-  firstName String?
-  avatarUrl String?
-  role      String  @default("user")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                      String                 @id @default(cuid())
+  userId                  String                 @unique
+  firstName               String?
+  avatarUrl               String?
+  role                    UserRole               @default(USER)
+  email                   String?
+  townId                  String?
+  town                    Town?                  @relation(fields: [townId], references: [id])
+  business                Business?
+  notifications           Notification[]
+  notificationDeliveries  NotificationDelivery[]
+  deviceTokens            DeviceToken[]
+  notificationPreferences Json?                  @default("{\"events\":true,\"promos\":true,\"townNews\":true}")
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @updatedAt
+}
+
+model Business {
+  id                       String         @id @default(cuid())
+  name                     String
+  slug                     String?        @unique
+  userId                   String         @unique
+  user                     Profile        @relation(fields: [userId], references: [id])
+  placeId                  String?        @unique
+  place                    Place?         @relation(fields: [placeId], references: [id])
+  subscriptionId           String?
+  subscription             Subscription?  @relation(fields: [subscriptionId], references: [id])
+  townId                   String?
+  town                     Town?          @relation(fields: [townId], references: [id])
+  logoUrl                  String?
+  heroImageUrl             String?
+  galleryUrls              String[]       @default([])
+  shortDescription         String?
+  longDescription          String?
+  descriptionTranslations  Json?          @default("{}")
+  contactEmail             String?
+  contactPhone             String?
+  notificationQuota        Int            @default(0)
+  quotaUsed                Int            @default(0)
+  quotaResetAt             DateTime
+  monthlyNotificationLimit Int?
+  monthlyEventLimit        Int?
+  notificationUsage        Int            @default(0)
+  eventUsage               Int            @default(0)
+  usageResetsAt            DateTime?
+  status                   String         @default("pending")
+  payments                 Payment[]
+  invoices                 Invoice[]
+  notifications            Notification[]
+  events                   Event[]        @relation("BusinessEvents")
+  createdAt                DateTime       @default(now())
+  updatedAt                DateTime       @updatedAt
+}
+
+model Subscription {
+  id                String             @id @default(cuid())
+  name              String
+  slug              String?            @unique
+  price             Float
+  currency          String             @default("USD")
+  billingPeriod     String
+  description       String?
+  notificationLimit Int
+  eventLimit        Int?
+  features          Json
+  target            SubscriptionTarget @default(BUSINESS)
+  priority          Int                @default(1)
+  isActive          Boolean            @default(true)
+  businesses        Business[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model Payment {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id])
+  invoiceId  String?
+  invoice    Invoice? @relation(fields: [invoiceId], references: [id])
+  amount     Float
+  currency   String
+  status     String
+  stripeId   String?  @unique
+  invoiceUrl String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+}
+
+model Notification {
+  id            String                 @id @default(cuid())
+  title         String
+  body          String
+  imageUrl      String?
+  data          Json?
+  type          String
+  language      String                 @default("en")
+  senderId      String
+  sender        Profile                @relation(fields: [senderId], references: [id])
+  targetType    String
+  targetFilter  Json?
+  scheduledFor  DateTime?
+  sentAt        DateTime?
+  status        String                 @default("draft")
+  deliveryCount Int                    @default(0)
+  clickCount    Int                    @default(0)
+  audienceCount Int?
+  quotaCost     Int                    @default(1)
+  townId        String?
+  town          Town?                  @relation(fields: [townId], references: [id])
+  businessId    String?
+  business      Business?              @relation(fields: [businessId], references: [id])
+  createdAt     DateTime               @default(now())
+  deliveries    NotificationDelivery[]
+}
+
+model Invoice {
+  id         String        @id @default(cuid())
+  type       InvoiceType
+  status     InvoiceStatus @default(DRAFT)
+  reference  String?
+  amount     Float
+  currency   String        @default("ISK")
+  vatRate    Float?        @default(0)
+  subtotal   Float?
+  total      Float?
+  issuedAt   DateTime?
+  dueDate    DateTime?
+  paidAt     DateTime?
+  notes      String?
+  pdfUrl     String?
+  townId     String?
+  town       Town?         @relation(fields: [townId], references: [id])
+  businessId String?
+  business   Business?     @relation(fields: [businessId], references: [id])
+  metadata   Json?
+  payments   Payment[]
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+}
+
+model NotificationDelivery {
+  id             String       @id @default(cuid())
+  notificationId String
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           Profile      @relation(fields: [userId], references: [id])
+  deviceToken    String
+  status         String
+  sentAt         DateTime?
+  deliveredAt    DateTime?
+  clickedAt      DateTime?
+  error          String?
+  createdAt      DateTime     @default(now())
+}
+
+model DeviceToken {
+  id         String   @id @default(cuid())
+  userId     String
+  user       Profile  @relation(fields: [userId], references: [id])
+  token      String   @unique
+  platform   String
+  isActive   Boolean  @default(true)
+  lastUsedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

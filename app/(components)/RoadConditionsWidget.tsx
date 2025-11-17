@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { MapPin, ExternalLink } from "lucide-react";
 import "leaflet/dist/leaflet.css";
@@ -20,11 +19,7 @@ type RoadConditionsWidgetProps = {
 };
 
 const RoadConditionsWidget = ({ townCenter }: RoadConditionsWidgetProps) => {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const isClient = typeof window !== "undefined";
 
   // Roads.is (Vegagerðin) provides road condition maps
   const roadMapUrl = `https://www.road.is/travel-info/road-conditions-and-weather/entire-country/island1e.html`;

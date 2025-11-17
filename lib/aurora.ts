@@ -61,6 +61,10 @@ export async function fetchAuroraForecast(
     else if (avgKp >= 2) probability = 25;
     else probability = 10;
 
+    const latitudeBoost = Math.min(Math.max(Math.abs(lat) / 90, 0.5), 1.2);
+    const longitudeAdjustment = Math.abs(lng) > 30 ? 0.95 : 1;
+    probability = Math.min(100, Math.round(probability * latitudeBoost * longitudeAdjustment));
+
     return {
       kpIndex: avgKp,
       probability,

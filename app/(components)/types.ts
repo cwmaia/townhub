@@ -1,4 +1,4 @@
-import type { Event, Place, PlaceType } from "@prisma/client";
+import type { Event, Place, PlaceType, UserRole } from "@prisma/client";
 import type { AppLocale } from "../../lib/i18n";
 
 export type TownHubPlace = Place & {
@@ -23,7 +23,7 @@ export type TownCenter = {
 export type ProfileSummary = {
   firstName?: string | null;
   avatarUrl?: string | null;
-  role?: string | null;
+  role?: UserRole | null;
 };
 
 export type Destination = {

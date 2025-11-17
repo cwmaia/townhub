@@ -26,6 +26,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
 import { createSupabaseBrowserClient } from "../../lib/supabase/client";
 import type { ProfileSummary } from "./types";
 import type { AppLocale } from "../../lib/i18n";
+import { UserRole } from "@prisma/client";
 
 type ProfileMenuProps = {
   profile: ProfileSummary | null;
@@ -52,6 +53,9 @@ const ProfileMenu = ({ profile, currentLocale }: ProfileMenuProps) => {
     }
     return "TH";
   }, [profile?.firstName]);
+
+  const canAccessAdmin =
+    profile?.role === UserRole.SUPER_ADMIN || profile?.role === UserRole.TOWN_ADMIN;
 
   const handleSignOut = async () => {
     startTransition(async () => {
@@ -185,7 +189,7 @@ const ProfileMenu = ({ profile, currentLocale }: ProfileMenuProps) => {
           {profile.firstName ?? "Guest"}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {profile.role === "admin" ? (
+        {canAccessAdmin ? (
           <DropdownMenuItem
             onClick={() => {
               const locale = currentLocale;

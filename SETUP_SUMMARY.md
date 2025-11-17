@@ -36,6 +36,7 @@ DATABASE_URL="postgresql://postgres.magtuguppyucsxbxdpuh:Cwm1980%21%40%23%24%25@
 
 # Admin
 ADMIN_EMAILS="admin@example.com"
+TOWN_ADMIN_EMAILS="stykk-admin@example.com"
 ```
 
 ---
@@ -179,7 +180,7 @@ model Profile {
 ### Optional Enhancements
 
 #### 1. Admin Features
-- [ ] Update `ADMIN_EMAILS` in `.env.local` with real admin email
+- [ ] Update `ADMIN_EMAILS` and `TOWN_ADMIN_EMAILS` in `.env.local` with real addresses
 - [ ] Test admin panel at `/en/admin`
 - [ ] Verify place/event CRUD operations work
 - [ ] Test authentication flow with Supabase magic links
@@ -236,7 +237,7 @@ model Profile {
    - Fix: Will be addressed in future Next.js releases
 
 3. **Admin Email Default** - Currently set to `admin@example.com`
-   - Fix: Update `ADMIN_EMAILS` in `.env.local` with real email
+  - Fix: Update `ADMIN_EMAILS`/`TOWN_ADMIN_EMAILS` in `.env.local` with real emails
 
 ### API Limitations
 1. **Google Maps Free Tier**

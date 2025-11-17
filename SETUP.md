@@ -89,6 +89,7 @@ DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/townhub"
 SUPABASE_URL="your-supabase-url"
 SUPABASE_ANON_KEY="your-supabase-anon-key"
 ADMIN_EMAILS="your-email@example.com"
+TOWN_ADMIN_EMAILS="stykkish-town-admin@example.com"
 ```
 
 ### 5. Push Database Schema
@@ -133,7 +134,7 @@ After setup, verify everything works:
 
 3. **Admin Access:**
    - Visit http://localhost:3000/en/auth
-   - Sign in with admin email (from ADMIN_EMAILS)
+   - Sign in with super admin (`ADMIN_EMAILS`) or town admin (`TOWN_ADMIN_EMAILS`) email
    - Check magic link in email
    - Visit http://localhost:3000/en/admin
 
@@ -214,6 +215,7 @@ townhub/
 - `SUPABASE_URL` - Your Supabase project URL
 - `SUPABASE_ANON_KEY` - Supabase anonymous key
 - `ADMIN_EMAILS` - Comma-separated admin emails
+- `TOWN_ADMIN_EMAILS` - Comma-separated emails for town-scoped admins
 
 ### Optional (for enhanced features)
 - `GOOGLE_MAPS_API_KEY` - For map display

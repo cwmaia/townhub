@@ -10,6 +10,7 @@ import { fetchAuroraForecast } from "../../lib/aurora";
 import { getStaticMapUrl, distanceMatrix } from "../../lib/google";
 import { estimateTravelTimes } from "../../lib/geo";
 import { locales, type AppLocale } from "../../lib/i18n";
+import { UserRole } from "@prisma/client";
 
 const TOWN_NAME = process.env.NEXT_PUBLIC_TOWN_NAME ?? "Stykkishólmur";
 
@@ -95,17 +96,18 @@ const getProfile = async (): Promise<ProfileSummary | null> => {
     user.email?.split("@")[0] ??
     "Guest";
 
+  const isAdmin = (process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((item) => item.trim())
+    .includes(user.email ?? "");
+
   const created = await prisma.profile.create({
     data: {
       userId: user.id,
       firstName,
       avatarUrl: user.user_metadata?.avatar_url ?? null,
-      role: (process.env.ADMIN_EMAILS ?? "")
-        .split(",")
-        .map((item) => item.trim())
-        .includes(user.email ?? "")
-        ? "admin"
-        : "user",
+      email: user.email,
+      role: isAdmin ? UserRole.SUPER_ADMIN : UserRole.USER,
     },
   });
 

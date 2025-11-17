@@ -21,6 +21,22 @@ type FullMapModalProps = {
   townName: string;
 };
 
+const getMarkerIcon = (type: string): string => {
+  const baseUrl = "http://maps.google.com/mapfiles/ms/icons";
+  switch (type) {
+    case "LODGING":
+      return `${baseUrl}/blue-dot.png`;
+    case "RESTAURANT":
+      return `${baseUrl}/red-dot.png`;
+    case "ATTRACTION":
+      return `${baseUrl}/green-dot.png`;
+    case "TOWN_SERVICE":
+      return `${baseUrl}/yellow-dot.png`;
+    default:
+      return `${baseUrl}/purple-dot.png`;
+  }
+};
+
 const FullMapModal = ({
   open,
   onOpenChange,
@@ -35,12 +51,8 @@ const FullMapModal = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  console.log('FullMapModal render - open:', open, 'mapRef.current:', !!mapRef.current, 'places count:', places.length);
-
   useEffect(() => {
-    console.log('FullMapModal useEffect triggered - open:', open, 'mapRef.current:', !!mapRef.current);
     if (!open) {
-      console.log('FullMapModal useEffect - modal not open, returning early');
       return;
     }
 
@@ -51,40 +63,27 @@ const FullMapModal = ({
 
         const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-        console.log('Google Maps API Key available:', !!apiKey);
-        console.log('Initializing map...');
-
         if (!apiKey) {
           setError('Google Maps API key is not configured. Please set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY in your environment variables.');
           setIsLoading(false);
           return;
         }
 
-        // Load Google Maps script dynamically
-        console.log('Loading Google Maps API script...');
-
-        // Check if Google Maps is already loaded
         if (!window.google?.maps) {
           await new Promise<void>((resolve, reject) => {
             const script = document.createElement('script');
             script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
             script.async = true;
             script.defer = true;
-            script.onload = () => {
-              console.log('Google Maps API loaded successfully!');
-              resolve();
-            };
+            script.onload = () => resolve();
             script.onerror = () => {
               reject(new Error('Failed to load Google Maps API'));
             };
             document.head.appendChild(script);
           });
-        } else {
-          console.log('Google Maps API already loaded');
         }
 
         // Initialize the map
-        console.log('Initializing map with center:', townCenter);
         const map = new google.maps.Map(mapRef.current!, {
           center: { lat: townCenter.lat, lng: townCenter.lng },
           zoom: 14,
@@ -94,7 +93,6 @@ const FullMapModal = ({
           zoomControl: true,
         });
 
-        console.log('Map initialized successfully!');
         googleMapRef.current = map;
 
         // Add town center marker
@@ -204,24 +202,19 @@ const FullMapModal = ({
     let checkRef: NodeJS.Timeout | null = null;
 
     if (!mapRef.current) {
-      console.log('FullMapModal - ref not ready yet, waiting...');
       checkRef = setInterval(() => {
         if (mapRef.current) {
-          console.log('FullMapModal - ref is now ready!');
           if (checkRef) clearInterval(checkRef);
           initMap();
         }
       }, 50);
     } else {
-      console.log('FullMapModal - ref already available, initializing immediately');
       initMap();
     }
 
     // Cleanup function
     return () => {
-      console.log('FullMapModal - cleanup function called');
       if (checkRef) {
-        console.log('FullMapModal - cleaning up interval');
         clearInterval(checkRef);
       }
       // Cleanup markers when modal closes
@@ -231,23 +224,6 @@ const FullMapModal = ({
       }
     };
   }, [open, places, townCenter, townName]);
-
-  const getMarkerIcon = (type: string): string => {
-    // Return colored marker icons based on place type
-    const baseUrl = 'http://maps.google.com/mapfiles/ms/icons';
-    switch (type) {
-      case 'LODGING':
-        return `${baseUrl}/blue-dot.png`;
-      case 'RESTAURANT':
-        return `${baseUrl}/red-dot.png`;
-      case 'ATTRACTION':
-        return `${baseUrl}/green-dot.png`;
-      case 'TOWN_SERVICE':
-        return `${baseUrl}/yellow-dot.png`;
-      default:
-        return `${baseUrl}/purple-dot.png`;
-    }
-  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
