@@ -27,7 +27,7 @@ export type SeedEvent = {
 
 const downloadDir = path.resolve("public/media");
 
-const imageManifest: Record<string, string> = {
+export const stykkisholmurImageManifest: Record<string, string> = {
   // Services
   "Stykkishólmur Police":
     "https://images.unsplash.com/photo-1527786356702-4b19cf256c86?auto=format&fit=crop&w=800&h=800&q=80",
@@ -97,7 +97,7 @@ const imageManifest: Record<string, string> = {
     "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=800",
 };
 
-const events: SeedEvent[] = [
+export const stykkisholmurEvents: SeedEvent[] = [
   {
     title: "Breiðafjörður Seafood Festival",
     description:
@@ -177,11 +177,15 @@ const enrichPlace = async (
   const targetImage = path.join(downloadDir, `${slug}.jpg`);
 
   let imagePath: string | null = null;
-  const remoteImage = imageManifest[place.name];
-  if (remoteImage) {
-    imagePath = (await ensureImage(remoteImage, targetImage))
-      ? `/media/${path.basename(targetImage)}`
-      : null;
+  if (fs.existsSync(targetImage)) {
+    imagePath = `/media/${path.basename(targetImage)}`;
+  } else {
+    const remoteImage = stykkisholmurImageManifest[place.name];
+    if (remoteImage) {
+      imagePath = (await ensureImage(remoteImage, targetImage))
+        ? `/media/${path.basename(targetImage)}`
+        : null;
+    }
   }
 
   let lat = place.lat;
@@ -219,6 +223,33 @@ const ensurePlaceholder = async () => {
   await fs.promises.writeFile(placeholderPath, svgPlaceholder);
 };
 
+const resolveEventImage = async (event: SeedEvent) => {
+  const slug = slugify(event.title);
+  const targetImage = path.join(downloadDir, `${slug}.jpg`);
+
+  if (fs.existsSync(targetImage)) {
+    return {
+      ...event,
+      imageUrl: `/media/${path.basename(targetImage)}`,
+    };
+  }
+
+  if (event.imageUrl) {
+    const ensured = await ensureImage(event.imageUrl, targetImage);
+    if (ensured) {
+      return {
+        ...event,
+        imageUrl: `/media/${path.basename(ensured)}`,
+      };
+    }
+  }
+
+  return {
+    ...event,
+    imageUrl: "/media/placeholder.svg",
+  };
+};
+
 export const fetchStykkisholmur = async () => {
   await ensurePlaceholder();
   const townCenter = await getTownCenter();
@@ -230,7 +261,11 @@ export const fetchStykkisholmur = async () => {
     hydrated.push(enriched);
   }
 
-  return { places: hydrated, events, townCenter };
+  const resolvedEvents = await Promise.all(
+    stykkisholmurEvents.map((event) => resolveEventImage(event))
+  );
+
+  return { places: hydrated, events: resolvedEvents, townCenter };
 };
 
 export type FetchStykkisholmurResult = Awaited<
