@@ -142,6 +142,7 @@ ADMIN_EMAILS="your-email@example.com"
 TOWN_ADMIN_EMAILS="stykkish-town-admin@example.com"
 
 # Optional but recommended
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
 GOOGLE_MAPS_API_KEY="your-google-maps-key"
 GOOGLE_DISTANCE_MATRIX_API_KEY="your-distance-matrix-key"
 UNSPLASH_ACCESS_KEY="your-unsplash-key"

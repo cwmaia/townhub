@@ -220,6 +220,7 @@ townhub/
 - `TOWN_ADMIN_EMAILS` - Comma-separated emails for town-scoped admins
 
 ### Optional (for enhanced features)
+- `NEXT_PUBLIC_APP_URL` - Base URL for claim/invite links (e.g., http://localhost:3000)
 - `GOOGLE_MAPS_API_KEY` - For map display
 - `GOOGLE_DISTANCE_MATRIX_API_KEY` - For travel distances
 - `UNSPLASH_ACCESS_KEY` - For image fetching
