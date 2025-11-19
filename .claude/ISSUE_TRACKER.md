@@ -213,7 +213,47 @@ All text in the mobile app is hardcoded in English. The CMS has EN/IS support, b
 
 ---
 
-### 7. Business Dashboard Not Implemented in Mobile App
+### 7. Login Page Redirects to Non-Existent Locale Route
+**Priority:** 🟠 P1
+**Status:** ⏳ Open (Needs Browser Testing)
+**Component:** CMS Auth / Middleware
+**Description:**
+The `/auth/login` route redirects to `/en/auth/login` which returns 404 (via curl). The login page exists at `/app/auth/login/page.tsx` (non-locale-aware), but the middleware with `localePrefix: "always"` redirects to a locale-prefixed route that doesn't exist.
+
+**Impact:**
+- Login page may be inaccessible
+- Admin users cannot authenticate
+- Blocks all admin UI testing
+
+**Root Cause:**
+- Middleware: `/middleware.ts` uses `next-intl` with `localePrefix: "always"`
+- Login page: `/app/auth/login/page.tsx` (NOT in `/app/[locale]/auth/`)
+- Redirect: `/auth/login` → `/en/auth/login` (doesn't exist)
+
+**curl Test Results:**
+```
+curl -I /auth/login → 307 redirect to /en/auth/login
+curl -L /auth/login → 404 (followed redirect)
+```
+
+**Potential Solutions:**
+1. **Move login page** to `/app/[locale]/auth/login/page.tsx` (locale-aware)
+2. **Exclude /auth/* from middleware** - update matcher to skip auth routes
+3. **Test in browser first** - might work in browser despite curl 404
+
+**Files Affected:**
+- `/middleware.ts` - Lines 6-12 (matcher config)
+- `/app/auth/login/page.tsx` - Current location
+- OR create `/app/[locale]/auth/login/page.tsx` - New location
+
+**Status:**
+⏳ **Needs browser testing** - curl 404 might not reflect actual browser behavior
+
+**Discovered:** 2025-11-19 during admin authentication testing
+
+---
+
+### 8. Business Dashboard Not Implemented in Mobile App
 **Priority:** 🟠 P1
 **Status:** ⏳ Open
 **Component:** Mobile App
@@ -244,7 +284,7 @@ Business owners have no way to view their subscription, send notifications, or m
 
 ## MEDIUM PRIORITY ISSUES (P2)
 
-### 8. No Background Job Queue for Scheduled Notifications
+### 9. No Background Job Queue for Scheduled Notifications
 **Priority:** 🟡 P2
 **Status:** ⏳ Open
 **Component:** CMS Backend
@@ -266,7 +306,7 @@ Notifications with `scheduledFor` datetime are stored but not automatically sent
 
 ---
 
-### 9. Event Engagement Analytics Not Aggregated by Business
+### 10. Event Engagement Analytics Not Aggregated by Business
 **Priority:** 🟡 P2
 **Status:** ⏳ Open
 **Component:** CMS Admin
@@ -287,7 +327,7 @@ Event view/favorite/RSVP counts are tracked per event, but there's no business-l
 
 ---
 
-### 10. No Notification Templates
+### 11. No Notification Templates
 **Priority:** 🟡 P2
 **Status:** ⏳ Open
 **Component:** CMS Admin
@@ -308,7 +348,7 @@ Every notification must be written from scratch. No reusable templates or variab
 
 ---
 
-### 11. Mobile App Has No Offline Support
+### 12. Mobile App Has No Offline Support
 **Priority:** 🟡 P2
 **Status:** ⏳ Open
 **Component:** Mobile App
@@ -332,7 +372,7 @@ If the user loses internet connection, the app shows errors instead of cached da
 
 ## LOW PRIORITY ISSUES (P3)
 
-### 12. No Animations or Transitions
+### 13. No Animations or Transitions
 **Priority:** 🟢 P3
 **Status:** ⏳ Open
 **Component:** Mobile App
@@ -351,7 +391,7 @@ Navigation, loading states, and interactions have no animations. App feels stati
 
 ---
 
-### 13. No Audit Logs for Admin Actions
+### 14. No Audit Logs for Admin Actions
 **Priority:** 🟢 P3
 **Status:** ⏳ Open
 **Component:** CMS Admin
@@ -373,7 +413,7 @@ No tracking of who created/edited/deleted businesses, notifications, or invoices
 
 ## ENVIRONMENTAL BLOCKERS
 
-### 14. Mobile App Cannot Start in Sandbox Environment
+### 15. Mobile App Cannot Start in Sandbox Environment
 **Priority:** 🚫 **BLOCKED**
 **Status:** 🚫 Blocked
 **Component:** Development Environment
@@ -432,15 +472,15 @@ Pivoting to CMS admin UI testing while mobile environment is blocked.
 ### Mobile App Screens
 | Screen | Tested | Status | Notes |
 |--------|--------|--------|-------|
-| Login | 🚫 | Blocked | Expo won't start (see Issue #14) |
-| Register | 🚫 | Blocked | Expo won't start (see Issue #14) |
-| Home/Dashboard | 🚫 | Blocked | Expo won't start (see Issue #14) |
-| Places | 🚫 | Blocked | Expo won't start (see Issue #14) |
-| Events | 🚫 | Blocked | Expo won't start (see Issue #14) |
-| Event Detail | 🚫 | Blocked | Expo won't start (see Issue #14) |
+| Login | 🚫 | Blocked | Expo won't start (see Issue #15) |
+| Register | 🚫 | Blocked | Expo won't start (see Issue #15) |
+| Home/Dashboard | 🚫 | Blocked | Expo won't start (see Issue #15) |
+| Places | 🚫 | Blocked | Expo won't start (see Issue #15) |
+| Events | 🚫 | Blocked | Expo won't start (see Issue #15) |
+| Event Detail | 🚫 | Blocked | Expo won't start (see Issue #15) |
 | Place Detail | N/A | Stub | Not implemented |
 | Notifications | N/A | Stub | Not implemented |
-| Profile | 🚫 | Blocked | Expo won't start (see Issue #14) |
+| Profile | 🚫 | Blocked | Expo won't start (see Issue #15) |
 
 ### CMS Admin Pages
 | Page | Tested | Status | Notes |
@@ -474,25 +514,39 @@ Pivoting to CMS admin UI testing while mobile environment is blocked.
 
 **Active Blockers:**
 - ✅ ~~Issue #1: Admin pages broken~~ - FIXED (2025-11-19)
-- ⏳ Admin authentication - Need credentials or bypass for testing
-- 🚫 **Issue #14:** Mobile app cannot start (Expo port 65536 error - environmental issue)
+- ✅ ~~Admin authentication~~ - SUPER_ADMIN profile created (2025-11-19)
+- ⏳ **Issue #7:** Login page redirect (needs browser testing)
+- 🚫 **Issue #15:** Mobile app cannot start (Expo port 65536 error - environmental issue)
 - ⏳ Prisma CLI cannot connect to database (P1001 error) - runtime Prisma works fine
+- ⏳ npm run db:seed blocked by Node 22/ts-node compatibility
 
 ---
 
 ## NOTES
 
-- PgBouncer fix completed and verified 2025-11-19 ✅
+### Completed Today (2025-11-19)
+- PgBouncer fix completed and verified ✅
 - CMS dev server running without errors ✅
 - Public API endpoints all functional ✅
-- **CRITICAL BUG #1 FIXED:** Admin import paths corrected (2025-11-19) ✅
+- **CRITICAL BUG #1 FIXED:** Admin import paths corrected ✅
 - Admin pages now compile successfully ✅
+- **SUPER_ADMIN profile created** (scripts/ensure-admin-profile.js) ✅
+- Helper script created for admin bootstrapping ✅
+
+### Current Status
 - Mobile app is ~40-50% feature complete
 - CMS Phase C is ~75% complete
-- Focus should be on P0/P1 issues before adding new features
-- Next priority: Resolve admin auth to test notification center UI
+- Admin authentication ready (needs browser testing)
+- 15 issues documented (2 fixed, 13 open)
+- Focus on P0/P1 issues before new features
+
+### Next Session Priority
+- **Browser testing required** - Test login at /auth/login with carlos@waystar.is
+- Once logged in, test admin UI (/en/admin, /en/admin/notifications, /en/admin/businesses)
+- Document UI rendering, features, and any bugs found
+- Verify notification center Phase C features work
 
 ---
 
 **Last Updated By:** Architect AI (2025-11-19)
-**Next Review:** After admin auth resolved and UI tested
+**Next Review:** After browser testing of admin UI
