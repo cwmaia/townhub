@@ -463,6 +463,56 @@ Pivoting to CMS admin UI testing while mobile environment is blocked.
 
 ---
 
+### 16. Supabase Not Reachable from Sandbox Environment
+**Priority:** 🚫 **BLOCKED**
+**Status:** 🚫 Blocked
+**Component:** Development Environment / Network
+**Description:**
+The sandbox environment cannot resolve or reach the Supabase hostname (`magtuguppyucsxbxdpuh.supabase.co`). DNS resolution fails, preventing any server-side or CLI-based Supabase operations including authentication testing.
+
+**Impact:**
+- Cannot test login from CLI/curl (network requests fail)
+- Cannot verify Supabase Auth functionality in sandbox
+- "Invalid API key" error is actually a DNS/connectivity failure
+- Blocks server-side Supabase operations
+
+**Error Details:**
+```
+curl https://magtuguppyucsxbxdpuh.supabase.co
+→ curl: (6) Could not resolve host: magtuguppyucsxbxdpuh.supabase.co
+```
+
+**Root Cause:**
+- Sandbox has DNS/network restrictions
+- Cannot resolve external hostnames
+- Supabase endpoints unreachable from sandbox
+- This affects both curl tests and potentially server-side auth
+
+**Impact on Testing:**
+- ❌ Cannot test login via curl/CLI
+- ❌ Cannot verify Supabase connectivity
+- ✅ CMS server can connect (uses environment network context)
+- ✅ User browser should work (client-side, different network)
+
+**Workaround:**
+- User must test login in their browser (client-side connection)
+- Browser runs on user's machine with normal internet access
+- Browser will connect directly to Supabase (bypasses sandbox)
+- All Supabase Auth testing must happen in user's browser
+
+**Current Strategy:**
+All login and authentication testing must be performed by the user in their browser. The sandbox can verify server setup but cannot test actual Supabase connectivity.
+
+**Verified:**
+- ✅ Login page renders correctly
+- ✅ Environment variables configured properly
+- ✅ CMS server can use Supabase (runtime connection works)
+- ❌ CLI/curl cannot reach Supabase (network restriction)
+
+**Discovered:** 2025-11-19 during login debugging
+
+---
+
 ## TESTING STATUS
 
 ### CMS API Endpoints
@@ -523,7 +573,8 @@ Pivoting to CMS admin UI testing while mobile environment is blocked.
 - ✅ ~~Issue #1: Admin pages broken~~ - FIXED (2025-11-19)
 - ✅ ~~Issue #7: Login page redirect~~ - FIXED (2025-11-19)
 - ✅ ~~Admin authentication~~ - SUPER_ADMIN profile created (2025-11-19)
-- 🚫 **Issue #15:** Mobile app cannot start (Expo port 65536 error - environmental issue)
+- 🚫 **Issue #15:** Mobile app cannot start (Expo port error - environmental)
+- 🚫 **Issue #16:** Supabase not reachable from sandbox (DNS failure - environmental)
 - ⏳ Prisma CLI cannot connect to database (P1001 error) - runtime Prisma works fine
 - ⏳ npm run db:seed blocked by Node 22/ts-node compatibility
 
