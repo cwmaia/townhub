@@ -4,21 +4,21 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { randomUUID } from "crypto";
 import { SubscriptionTarget, UserRole } from "@prisma/client";
-import { prisma } from "../../../../../lib/db";
-import { locales, type AppLocale } from "../../../../../lib/i18n";
-import { Button } from "../../../../../components/ui/button";
-import { Input } from "../../../../../components/ui/input";
-import { Textarea } from "../../../../../components/ui/textarea";
+import { prisma } from "@/lib/db";
+import { locales, type AppLocale } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../../../components/ui/select";
-import { Badge } from "../../../../../components/ui/badge";
-import { slugify } from "../../../../../lib/utils";
-import { requireRole } from "../../../../../lib/auth/guards";
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { slugify } from "@/lib/utils";
+import { requireRole } from "@/lib/auth/guards";
 import { resolveAdminTownContext } from "../helpers";
 import { ImageUploadInput } from "../../../(components)/admin/ImageUploadInput";
 import { CopyButton } from "../../../(components)/admin/CopyButton";
