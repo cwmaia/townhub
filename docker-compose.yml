@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: townhub-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: townhub
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: townhub-backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Database
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/townhub
+
+      # App URLs
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+
+      # Town Config
+      NEXT_PUBLIC_TOWN_NAME: ${NEXT_PUBLIC_TOWN_NAME:-Stykkishólmur}
+      NEXT_PUBLIC_TOWN_CENTER_COORDS: ${NEXT_PUBLIC_TOWN_CENTER_COORDS:-65.074,-22.730}
+      NEXT_PUBLIC_DEFAULT_LANG: ${NEXT_PUBLIC_DEFAULT_LANG:-en}
+
+      # Weather API
+      NEXT_PUBLIC_OPEN_METEO_BASE: https://api.open-meteo.com/v1/forecast
+
+      # Google Maps (optional - add your keys to .env)
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
+      GOOGLE_DISTANCE_MATRIX_API_KEY: ${GOOGLE_DISTANCE_MATRIX_API_KEY:-}
+
+      # Supabase (add your keys to .env)
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:-}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
+      SUPABASE_STORAGE_BUCKET: ${SUPABASE_STORAGE_BUCKET:-townapp-media}
+
+      # Image APIs (optional)
+      GOOGLE_CUSTOM_SEARCH_API_KEY: ${GOOGLE_CUSTOM_SEARCH_API_KEY:-}
+      GOOGLE_CUSTOM_SEARCH_ENGINE_ID: ${GOOGLE_CUSTOM_SEARCH_ENGINE_ID:-}
+      UNSPLASH_ACCESS_KEY: ${UNSPLASH_ACCESS_KEY:-}
+      PEXELS_API_KEY: ${PEXELS_API_KEY:-}
+
+      # Admin
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-admin@example.com}
+      TOWN_ADMIN_EMAILS: ${TOWN_ADMIN_EMAILS:-admin@example.com}
+
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "npx prisma migrate deploy --schema=/app/database/schema.prisma && node server.js"
+
+volumes:
+  postgres_data:

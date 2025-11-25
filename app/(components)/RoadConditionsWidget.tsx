@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { MapPin, ExternalLink } from "lucide-react";
+import { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
 
 // Dynamically import Leaflet components to avoid SSR issues
@@ -19,7 +20,11 @@ type RoadConditionsWidgetProps = {
 };
 
 const RoadConditionsWidget = ({ townCenter }: RoadConditionsWidgetProps) => {
-  const isClient = typeof window !== "undefined";
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Roads.is (Vegagerðin) provides road condition maps
   const roadMapUrl = `https://www.road.is/travel-info/road-conditions-and-weather/entire-country/island1e.html`;
@@ -47,7 +52,7 @@ const RoadConditionsWidget = ({ townCenter }: RoadConditionsWidgetProps) => {
 
       {/* Map */}
       <div className="relative flex-1 bg-slate-100">
-        {isClient ? (
+        {mounted ? (
           <MapContainer
             center={[townCenter.lat, townCenter.lng]}
             zoom={9}

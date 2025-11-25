@@ -65,6 +65,7 @@ model Town {
   profiles      Profile[]
   notifications Notification[]
   invoices      Invoice[]
+  segments      NotificationSegment[]
 }
 
 model Place {
@@ -111,6 +112,44 @@ model Event {
   townId                  String?
   town                    Town?     @relation(fields: [townId], references: [id])
   createdAt               DateTime  @default(now())
+  isTownEvent             Boolean   @default(false)
+  isFeatured              Boolean   @default(false)
+  viewCount               Int       @default(0)
+  favorites               EventFavorite[]
+  rsvps                   EventRSVP[]
+}
+
+model EventFavorite {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, profileId])
+}
+
+model EventRSVP {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, profileId])
+}
+
+model BusinessFavorite {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  profileId  String
+  profile    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([businessId, profileId])
 }
 
 model Profile {
@@ -126,7 +165,10 @@ model Profile {
   notifications           Notification[]
   notificationDeliveries  NotificationDelivery[]
   deviceTokens            DeviceToken[]
-  notificationPreferences Json?                  @default("{\"events\":true,\"promos\":true,\"townNews\":true}")
+  eventFavorites          EventFavorite[]
+  eventRSVPs              EventRSVP[]
+  businessFavorites       BusinessFavorite[]
+  notificationPreferences Json?                  @default("{\"events\":true,\"promos\":true,\"townAlerts\":true,\"weatherAlerts\":true,\"businessAlerts\":true}")
   createdAt               DateTime               @default(now())
   updatedAt               DateTime               @updatedAt
 }
@@ -166,6 +208,7 @@ model Business {
   notifications            Notification[]
   events                   Event[]         @relation("BusinessEvents")
   claims                   BusinessClaim[]
+  favorites                BusinessFavorite[]
   createdAt                DateTime        @default(now())
   updatedAt                DateTime        @updatedAt
 }
@@ -229,6 +272,19 @@ model Notification {
   business      Business?              @relation(fields: [businessId], references: [id])
   createdAt     DateTime               @default(now())
   deliveries    NotificationDelivery[]
+}
+
+model NotificationSegment {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  filters     Json
+  isActive    Boolean  @default(true)
+  townId      String?
+  town        Town?    @relation(fields: [townId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Invoice {

@@ -86,6 +86,15 @@ Create a multi-tenant CMS/control plane for TownApp that powers:
 | 2025-11-17        | Role guards + admin shell | Added shared auth helpers, environment docs, and the new `/admin` layout + navigation with lint fixes. |
 | 2025-11-17        | Phase B – Business management | Added `/admin/businesses`, Supabase Storage uploads, owner invite/claim flow, and server actions for create/update/delete with place + tier linking. |
 | 2025-11-17        | Notification shell | Shipped `/admin/notifications` with stats, draft creation server action, and town-scoped history list (Phase C groundwork). |
+| 2025-11-18        | Phase C – Composer polish | Added segmentation + deep-link controls, stored target filters, and surfaced audience context in history to prep analytics & quota tracking. |
+| 2025-11-18        | Phase C – Analytics telemetry | Wired dashboard cards to live notifications/quota aggregates, surfaced delivery rate + deep-link counts, and documented town-level quota usage. |
+| 2025-11-19        | Phase C – Analytics expansion | Added weekly/30-day trend sparkline, NotificationDelivery status chips, and average-per-day summary for faster insight into campaign pacing. |
+| 2025-11-19        | Phase D – Billing overview | Added billing cards, upcoming due summaries, and a recent invoice list so admins can see town billing health from the notifications shell. |
+| 2025-11-19        | Phase E – Localization polish | Added locale switcher, translation reminders, and composer language guidance to keep EN/IS drafts aligned. |
+| 2025-11-19        | Phase C – Town data snapshot | Added Stykkishólmur snapshot cards plus upcoming events so the CMS shows real town data for the prototype. |
+| 2025-11-19        | Phase C – Event engagement | Hooked up views/favorites/RSVPs (API + mobile UI) and surfaced the counts in the CMS so businesses can see traction. |
+| 2025-11-19        | Phase C – Alert segments | Added CMS controls to manage town/weather/business alert segments so the composer stays aligned with mobile preferences. |
+| 2025-11-18        | Phase C – Trend & delivery visibility | Added weekly trend sparkline, surfaced NotificationDelivery status counts, and tied delivery-rate metrics to actual delivery records for better analytics readiness. |
 
 > Add a new row for every meaningful update (feature completed, schema change, etc.) to keep historical context.
 

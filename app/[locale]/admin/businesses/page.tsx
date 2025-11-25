@@ -45,7 +45,9 @@ const createBusinessAction = async (formData: FormData) => {
     .map((item) => item.trim())
     .filter(Boolean);
   const subscriptionId = formData.get("subscriptionId")?.toString() || null;
-  const placeId = formData.get("placeId")?.toString() || null;
+  const placeIdRaw = formData.get("placeId")?.toString();
+  const placeId =
+    placeIdRaw === "none" || !placeIdRaw ? null : placeIdRaw;
   const status = formData.get("status")?.toString() || "pending";
 
   if (!name || !subscriptionId) {
@@ -285,7 +287,7 @@ export default async function BusinessesPage({ params }: BusinessesPageProps) {
                 <SelectValue placeholder="Optional place listing" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">No linked place</SelectItem>
+            <SelectItem value="none">No linked place</SelectItem>
                 {places.map((place) => (
                   <SelectItem key={place.id} value={place.id}>
                     {place.name}

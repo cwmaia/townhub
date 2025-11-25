@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  backend:
+    image: node:20-alpine
+    container_name: townhub-backend-dev
+    working_dir: /app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Database (uses Supabase from .env)
+      DATABASE_URL: ${DATABASE_URL}
+
+      # App URLs
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+
+      # Town Config
+      NEXT_PUBLIC_TOWN_NAME: ${NEXT_PUBLIC_TOWN_NAME:-Stykkishólmur}
+      NEXT_PUBLIC_TOWN_CENTER_COORDS: ${NEXT_PUBLIC_TOWN_CENTER_COORDS:-65.074,-22.730}
+      NEXT_PUBLIC_DEFAULT_LANG: ${NEXT_PUBLIC_DEFAULT_LANG:-en}
+
+      # Weather API
+      NEXT_PUBLIC_OPEN_METEO_BASE: https://api.open-meteo.com/v1/forecast
+
+      # Google Maps
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      GOOGLE_DISTANCE_MATRIX_API_KEY: ${GOOGLE_DISTANCE_MATRIX_API_KEY}
+
+      # Supabase
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
+      SUPABASE_STORAGE_BUCKET: ${SUPABASE_STORAGE_BUCKET:-townapp-media}
+
+      # Image APIs (optional)
+      GOOGLE_CUSTOM_SEARCH_API_KEY: ${GOOGLE_CUSTOM_SEARCH_API_KEY:-}
+      GOOGLE_CUSTOM_SEARCH_ENGINE_ID: ${GOOGLE_CUSTOM_SEARCH_ENGINE_ID:-}
+      UNSPLASH_ACCESS_KEY: ${UNSPLASH_ACCESS_KEY:-}
+      PEXELS_API_KEY: ${PEXELS_API_KEY:-}
+
+      # Admin
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-admin@example.com}
+      TOWN_ADMIN_EMAILS: ${TOWN_ADMIN_EMAILS:-admin@example.com}
+
+      NODE_ENV: development
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    command: sh -c "npm install && npx prisma generate --schema=database/schema.prisma && npm run dev"

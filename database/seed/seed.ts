@@ -184,7 +184,7 @@ async function main() {
 
   if (TOWN_ADMIN_EMAILS.length > 0) {
     console.info("Ensuring town admin profiles exist…");
-    for (const email of TOWN_ADMIN_EMAILS) {
+  for (const email of TOWN_ADMIN_EMAILS) {
       const supabaseUserId = email.trim();
       if (!supabaseUserId) continue;
 
@@ -204,6 +204,47 @@ async function main() {
         },
       });
     }
+  }
+
+  console.info("Seeding notification segments…");
+  const segments = [
+    {
+      slug: "town-alerts",
+      name: "Town Alerts",
+      description: "Emergency and civic notices for all residents.",
+      filters: { focus: ["town"] },
+    },
+    {
+      slug: "weather-alerts",
+      name: "Weather & Road Alerts",
+      description: "Bad weather, road, and aurora visibility warnings.",
+      filters: { focus: ["weather", "road", "aurora"] },
+    },
+    {
+      slug: "business-featured",
+      name: "Business Featured",
+      description: "Promoted business events for premium tiers.",
+      filters: { focus: ["business"] },
+    },
+  ];
+
+  for (const segment of segments) {
+    await prisma.notificationSegment.upsert({
+      where: { slug: segment.slug },
+      update: {
+        name: segment.name,
+        description: segment.description,
+        filters: segment.filters,
+        townId: town.id,
+      },
+      create: {
+        slug: segment.slug,
+        name: segment.name,
+        description: segment.description,
+        filters: segment.filters,
+        townId: town.id,
+      },
+    });
   }
 
   console.info("Seed completed.");

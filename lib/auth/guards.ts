@@ -4,6 +4,7 @@ import { type Profile, UserRole } from "@prisma/client";
 import type { User } from "@supabase/supabase-js";
 import { prisma } from "../db";
 import { createSupabaseServerClient } from "../supabase/server";
+import { getMockAuthSession } from "./mock";
 
 export type AuthContext = {
   user: User;
@@ -14,6 +15,10 @@ export async function getCurrentProfile(): Promise<{
   user: User | null;
   profile: Profile | null;
 }> {
+  const mockAuth = await getMockAuthSession();
+  if (mockAuth) {
+    return { user: mockAuth.user as User, profile: mockAuth.profile };
+  }
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },

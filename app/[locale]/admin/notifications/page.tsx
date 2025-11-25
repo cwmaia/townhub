@@ -8,6 +8,8 @@ import { prisma } from "@/lib/db";
 import { locales, type AppLocale } from "@/lib/i18n";
 import { requireRole } from "@/lib/auth/guards";
 import { resolveAdminTownContext } from "../helpers";
+import { sendPushNotifications, updateDeliveryStatus } from "@/lib/notifications/expo-push";
+import SendNotificationForm from "@/components/admin/SendNotificationForm";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -139,11 +141,19 @@ const updateNotificationAction = async (formData: FormData) => {
   revalidatePath(`/${locale}/admin/notifications`);
 };
 
-const sendNotificationAction = async (formData: FormData) => {
+type SendNotificationActionResult =
+  | { success: true; delivered: number; failed: number; notificationId: string }
+  | { error: string; notificationId: string };
+
+const sendNotificationAction = async (
+  formData: FormData,
+): Promise<SendNotificationActionResult> => {
   "use server";
   const locale = formData.get("locale")?.toString() ?? "en";
   const id = formData.get("id")?.toString();
-  if (!id) return;
+  if (!id) {
+    return { error: "Missing notification ID", notificationId: "" };
+  }
 
   const { townId } = await resolveAdminTownContext(formData);
 
@@ -220,39 +230,56 @@ const sendNotificationAction = async (formData: FormData) => {
     });
   }
 
-  await prisma.$transaction(async (tx) => {
-    if (businessToUpdate) {
-      await tx.business.update({
-        where: { id: businessToUpdate.id },
-        data: {
-          notificationUsage: { increment: 1 },
-        },
-      });
-    }
+  if (!tokens.length) {
+    return { error: "No active devices to send to", notificationId: notification.id };
+  }
 
-    await tx.notification.update({
-      where: { id: notification.id },
-      data: {
-        status: "sent",
-        sentAt: new Date(),
-        deliveryCount: tokens.length,
-        audienceCount: tokens.length,
-      },
+  try {
+    const sendResult = await sendPushNotifications({
+      title: notification.title,
+      body: notification.body ?? "",
+      data: (notification.data as Record<string, unknown>) ?? {},
+      tokens: tokens.map((token) => token.token),
     });
 
-    if (tokens.length) {
-      await tx.notificationDelivery.createMany({
-        data: tokens.map((token) => ({
-          notificationId: notification.id,
-          userId: token.userId,
-          deviceToken: token.token,
-          status: "queued",
-        })),
-      });
-    }
-  });
+    await updateDeliveryStatus(notification.id, sendResult.tickets);
 
-  revalidatePath(`/${locale}/admin/notifications`);
+    await prisma.$transaction(async (tx) => {
+      if (businessToUpdate) {
+        await tx.business.update({
+          where: { id: businessToUpdate.id },
+          data: {
+            notificationUsage: { increment: 1 },
+          },
+        });
+      }
+
+      await tx.notification.update({
+        where: { id: notification.id },
+        data: {
+          status: "sent",
+          sentAt: new Date(),
+          deliveryCount: sendResult.success,
+          audienceCount: tokens.length,
+        },
+      });
+    });
+
+    revalidatePath(`/${locale}/admin/notifications`);
+
+    return {
+      success: true,
+      delivered: sendResult.success,
+      failed: sendResult.failed,
+      notificationId: notification.id,
+    };
+  } catch (error) {
+    console.error("Failed to send notification", error);
+    return {
+      error: error instanceof Error ? error.message : "Failed to send notification",
+      notificationId: notification.id,
+    };
+  }
 };
 
 const updateSegmentAction = async (formData: FormData) => {
@@ -320,11 +347,11 @@ export default async function NotificationsPage({ params }: NotificationsPagePro
 
   const townId =
     auth.profile.role === UserRole.SUPER_ADMIN
-      ? auth.profile.townId
+      ? auth.profile.townId ?? (await prisma.town.findFirst())?.id
       : auth.profile.townId;
 
   if (!townId) {
-    redirect(`/${locale}`);
+    redirect(`/${locale}/admin`);
   }
 
   const TREND_WINDOWS = [7, 30] as const;
@@ -385,7 +412,7 @@ export default async function NotificationsPage({ params }: NotificationsPagePro
         title: true,
         location: true,
         startsAt: true,
-        shortDescription: true,
+        description: true,
       },
       take: 4,
     }),
@@ -1211,15 +1238,14 @@ export default async function NotificationsPage({ params }: NotificationsPagePro
                       </Button>
                     </div>
                   </form>
-                  <div className="flex justify-end">
-                    <form action={sendNotificationAction}>
-                      <input type="hidden" name="locale" value={locale} />
-                      <input type="hidden" name="townId" value={townId} />
-                      <input type="hidden" name="id" value={notification.id} />
-                      <Button type="submit" className="rounded-full">
-                        Send now
-                      </Button>
-                    </form>
+                  <div className="flex flex-col gap-2">
+                    <SendNotificationForm
+                      action={sendNotificationAction}
+                      locale={locale}
+                      townId={townId}
+                      notificationId={notification.id}
+                      disabled={notification.status !== "draft"}
+                    />
                   </div>
                 </div>
               );
