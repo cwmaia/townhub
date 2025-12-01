@@ -1,0 +1,38 @@
+<svg width="1284" height="2778" viewBox="0 0 1284 2778" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- TownApp Splash Screen -->
+
+  <!-- Blue Gradient Background -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1284" height="2778" fill="url(#bgGradient)"/>
+
+  <!-- Location Pin (centered) -->
+  <g transform="translate(522, 1050)">
+    <path
+      d="M120 0C54 0 0 54 0 120C0 210 120 305 120 305C120 305 240 210 240 120C240 54 186 0 120 0Z"
+      fill="#3b82f6"
+      stroke="white"
+      stroke-width="8"
+    />
+
+    <!-- Heart inside pin -->
+    <path
+      d="M120 75 C120 75 108 60 90 60 C65 60 50 80 50 100 C50 130 80 155 120 185 C160 155 190 130 190 100 C190 80 175 60 150 60 C132 60 120 75 120 75 Z"
+      fill="white"
+    />
+  </g>
+
+  <!-- App Name -->
+  <text x="642" y="1480" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="96" fill="white">
+    <tspan>Town</tspan><tspan fill="rgba(255,255,255,0.85)">App</tspan>
+  </text>
+
+  <!-- Tagline -->
+  <text x="642" y="1560" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="36" fill="rgba(255,255,255,0.7)" letter-spacing="4">
+    YOUR TOWN, CONNECTED
+  </text>
+</svg>

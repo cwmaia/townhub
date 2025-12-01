@@ -1,0 +1,46 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- TownApp Icon v2: Location pin with cozy house - represents small town community -->
+  <defs>
+    <linearGradient id="pinGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Location Pin -->
+  <path d="M256 32C159 32 80 111 80 208C80 340 256 480 256 480C256 480 432 340 432 208C432 111 353 32 256 32Z"
+        fill="url(#pinGradient)"/>
+
+  <!-- Cozy House -->
+  <g fill="white">
+    <!-- Roof -->
+    <path d="M256 100L156 180H356L256 100Z"/>
+
+    <!-- House body -->
+    <rect x="176" y="180" width="160" height="120" rx="4"/>
+
+    <!-- Door -->
+    <rect x="232" y="230" width="48" height="70" rx="4" fill="#3b82f6" opacity="0.4"/>
+
+    <!-- Door handle -->
+    <circle cx="270" cy="268" r="5" fill="#1e40af"/>
+
+    <!-- Left window -->
+    <rect x="190" y="200" width="32" height="32" rx="3" fill="#3b82f6" opacity="0.3"/>
+    <line x1="206" y1="200" x2="206" y2="232" stroke="#3b82f6" stroke-width="2" opacity="0.5"/>
+    <line x1="190" y1="216" x2="222" y2="216" stroke="#3b82f6" stroke-width="2" opacity="0.5"/>
+
+    <!-- Right window -->
+    <rect x="290" y="200" width="32" height="32" rx="3" fill="#3b82f6" opacity="0.3"/>
+    <line x1="306" y1="200" x2="306" y2="232" stroke="#3b82f6" stroke-width="2" opacity="0.5"/>
+    <line x1="290" y1="216" x2="322" y2="216" stroke="#3b82f6" stroke-width="2" opacity="0.5"/>
+
+    <!-- Chimney with smoke -->
+    <rect x="300" y="120" width="30" height="50" rx="2"/>
+
+    <!-- Smoke puffs -->
+    <circle cx="315" cy="105" r="10" fill="white" opacity="0.7"/>
+    <circle cx="325" cy="85" r="8" fill="white" opacity="0.5"/>
+    <circle cx="318" cy="68" r="6" fill="white" opacity="0.3"/>
+  </g>
+</svg>

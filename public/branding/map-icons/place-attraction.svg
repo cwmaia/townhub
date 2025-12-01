@@ -1,0 +1,22 @@
+<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Attraction Marker: Camera icon in purple pin -->
+
+  <!-- Pin shape -->
+  <path d="M16 0C9.4 0 4 5.4 4 12C4 20 16 40 16 40C16 40 28 20 28 12C28 5.4 22.6 0 16 0Z"
+        fill="#8b5cf6"
+        stroke="#6d28d9"
+        stroke-width="0.5"/>
+
+  <!-- Camera icon (white) -->
+  <g fill="white">
+    <!-- Camera body -->
+    <rect x="10" y="11" width="12" height="8" rx="1"/>
+    <!-- Lens -->
+    <circle cx="16" cy="15" r="3" stroke="white" stroke-width="1.5" fill="none"/>
+    <circle cx="16" cy="15" r="1.5" fill="white"/>
+    <!-- Viewfinder -->
+    <rect x="14" y="8" width="4" height="3" rx="0.5"/>
+    <!-- Flash -->
+    <rect x="19" y="12" width="2" height="1.5" rx="0.3"/>
+  </g>
+</svg>

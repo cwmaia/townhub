@@ -1,0 +1,59 @@
+<svg width="352" height="448" viewBox="0 0 352 448" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- TownApp Animated Logo: Organic Heart in Location Pin -->
+
+  <!-- Location Pin Base -->
+  <path
+    d="M176 0C79 0 0 79 0 176C0 308 176 448 176 448C176 448 352 308 352 176C352 79 273 0 176 0Z"
+    fill="#3b82f6"
+  />
+
+  <!-- Organic Heart - Smooth, flowing Bézier curves -->
+  <g id="heart">
+    <path
+      d="M176 90
+         C171 87 166 85 160 85
+         C145 85 133 97 133 112
+         C133 124 140 136 155 150
+         C165 159 176 168 176 168
+         L176 168
+         C176 168 187 159 197 150
+         C212 136 219 124 219 112
+         C219 97 207 85 192 85
+         C186 85 181 87 176 90Z"
+      fill="white"
+      stroke="none"
+    >
+      <!-- Heartbeat Animation -->
+      <animateTransform
+        attributeName="transform"
+        attributeType="XML"
+        type="scale"
+        values="1 1; 1.05 1.05; 1 1; 1 1"
+        dur="1.4s"
+        repeatCount="indefinite"
+        additive="sum"
+        calcMode="spline"
+        keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"
+        keyTimes="0; 0.15; 0.3; 1"
+      />
+      <animateTransform
+        attributeName="transform"
+        attributeType="XML"
+        type="translate"
+        values="0 0; 0 0; 0 0; 0 0"
+        dur="1.4s"
+        repeatCount="indefinite"
+        additive="sum"
+      />
+    </path>
+  </g>
+
+  <!-- Transform origin at heart center for smooth scaling -->
+  <defs>
+    <style>
+      #heart {
+        transform-origin: 176px 145px;
+      }
+    </style>
+  </defs>
+</svg>

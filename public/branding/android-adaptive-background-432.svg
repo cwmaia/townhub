@@ -1,0 +1,14 @@
+<svg width="432" height="432" viewBox="0 0 432 432" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Android Adaptive Icon - Background Layer (432x432) -->
+  <!-- Export this as PNG (no transparency needed) -->
+
+  <defs>
+    <linearGradient id="androidBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Gradient background -->
+  <rect width="432" height="432" fill="url(#androidBg)"/>
+</svg>

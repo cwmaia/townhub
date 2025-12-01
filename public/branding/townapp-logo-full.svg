@@ -1,0 +1,42 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- TownApp Full Logo: Icon + Wordmark -->
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Icon (scaled down from icon.svg) -->
+  <g transform="translate(20, 20)">
+    <!-- Location Pin -->
+    <path d="M130 24C94.5 24 66 52.5 66 96C66 156 130 236 130 236C130 236 194 156 194 96C194 52.5 165.5 24 130 24Z"
+          fill="url(#logoGradient)"
+          stroke="#1e40af"
+          stroke-width="4"/>
+
+    <!-- Church Spire -->
+    <g fill="white">
+      <path d="M130 60L112 90H148L130 60Z"/>
+      <rect x="119" y="90" width="22" height="36" rx="1"/>
+      <rect x="104" y="110" width="15" height="16" rx="1"/>
+      <rect x="141" y="110" width="15" height="16" rx="1"/>
+      <rect x="123" y="100" width="14" height="12" rx="7" fill="#3b82f6" opacity="0.3"/>
+      <circle cx="109" cy="116" r="3" fill="#3b82f6" opacity="0.3"/>
+      <circle cx="151" cy="116" r="3" fill="#3b82f6" opacity="0.3"/>
+      <rect x="123" y="118" width="14" height="8" rx="7" ry="0" fill="#1e40af" opacity="0.5"/>
+    </g>
+  </g>
+
+  <!-- Wordmark "TownApp" -->
+  <g transform="translate(280, 0)">
+    <!-- Town -->
+    <text x="0" y="170" font-family="system-ui, -apple-system, sans-serif" font-size="140" font-weight="700" fill="#1f2937" letter-spacing="-3">Town</text>
+
+    <!-- App -->
+    <text x="420" y="170" font-family="system-ui, -apple-system, sans-serif" font-size="140" font-weight="700" fill="#3b82f6" letter-spacing="-3">App</text>
+
+    <!-- Tagline -->
+    <text x="2" y="220" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="400" fill="#6b7280" letter-spacing="1">Your Town, Connected</text>
+  </g>
+</svg>

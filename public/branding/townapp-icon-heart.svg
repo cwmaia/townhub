@@ -1,0 +1,23 @@
+<svg width="352" height="448" viewBox="0 0 352 448" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- TownApp Icon: Heart in Location Pin - Love for your community -->
+  <defs>
+    <linearGradient id="pinGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Location Pin (centered in viewBox) -->
+  <path d="M176 0C79 0 0 79 0 176C0 308 176 448 176 448C176 448 352 308 352 176C352 79 273 0 176 0Z"
+        fill="url(#pinGradient)"/>
+
+  <!-- Heart (centered inside pin) -->
+  <path d="M176 290
+           C176 290 80 200 80 145
+           C80 105 110 75 148 75
+           C166 75 176 92 176 92
+           C176 92 186 75 204 75
+           C242 75 272 105 272 145
+           C272 200 176 290 176 290Z"
+        fill="white"/>
+</svg>

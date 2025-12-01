@@ -1,0 +1,24 @@
+<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Restaurant Marker: Fork & knife in orange pin -->
+
+  <!-- Pin shape -->
+  <path d="M16 0C9.4 0 4 5.4 4 12C4 20 16 40 16 40C16 40 28 20 28 12C28 5.4 22.6 0 16 0Z"
+        fill="#f97316"
+        stroke="#c2410c"
+        stroke-width="0.5"/>
+
+  <!-- Fork & Knife (white) -->
+  <g fill="white">
+    <!-- Fork (left) -->
+    <rect x="11" y="8" width="1" height="10" rx="0.3"/>
+    <rect x="10" y="8" width="0.6" height="5" rx="0.3"/>
+    <rect x="12.4" y="8" width="0.6" height="5" rx="0.3"/>
+
+    <!-- Knife (right) -->
+    <rect x="20" y="8" width="1" height="10" rx="0.3"/>
+    <path d="M20 8 L20 11 L21.5 10 L21.5 8 Z" fill="white"/>
+  </g>
+
+  <!-- Plate decoration (optional circle) -->
+  <circle cx="16" cy="14" r="6" stroke="white" stroke-width="0.5" fill="none" opacity="0.3"/>
+</svg>

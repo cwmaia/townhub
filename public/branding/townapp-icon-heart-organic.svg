@@ -1,0 +1,40 @@
+<svg width="352" height="448" viewBox="0 0 352 448" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- TownApp Animated Logo: Organic Heart with Smooth Curves -->
+
+  <!-- Location Pin Base -->
+  <path
+    d="M176 0C79 0 0 79 0 176C0 308 176 448 176 448C176 448 352 308 352 176C352 79 273 0 176 0Z"
+    fill="#3b82f6"
+  />
+
+  <!-- Organic Heart - Classic heart shape with smooth Bézier curves -->
+  <g id="heart">
+    <path
+      d="M 176 95
+         C 176 95, 171 90, 164 90
+         C 151 90, 140 101, 140 114
+         C 140 127, 148 140, 176 165
+         C 204 140, 212 127, 212 114
+         C 212 101, 201 90, 188 90
+         C 181 90, 176 95, 176 95 Z"
+      fill="white"
+    />
+  </g>
+
+  <!-- Animation CSS -->
+  <style>
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      10% { transform: scale(1.08); }
+      20% { transform: scale(1); }
+      30% { transform: scale(1.05); }
+      40% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+
+    #heart {
+      transform-origin: 176px 127px;
+      animation: heartbeat 2s ease-in-out infinite;
+    }
+  </style>
+</svg>

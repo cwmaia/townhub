@@ -1,0 +1,44 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- iOS App Icon 1024x1024 (NO rounded corners - iOS applies them) -->
+  <!-- Export this as PNG for iOS -->
+
+  <defs>
+    <linearGradient id="iosGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" fill="url(#iosGradient)"/>
+
+  <!-- Location Pin with Church (Centered, larger) -->
+  <g transform="translate(512, 512)">
+    <!-- Location Pin Shape -->
+    <path d="M0 -280C-120 -280 -220 -180 -220 -60C-220 120 0 320 0 320C0 320 220 120 220 -60C220 -180 120 -280 0 -280Z"
+          fill="white"
+          stroke="white"
+          stroke-width="12"/>
+
+    <!-- Church Spire (Icelandic style) -->
+    <g fill="#3b82f6">
+      <!-- Spire top -->
+      <path d="M0 -210L-50 -100H50L0 -210Z"/>
+
+      <!-- Main building -->
+      <rect x="-40" y="-100" width="80" height="140" rx="3"/>
+
+      <!-- Side wings -->
+      <rect x="-80" y="-40" width="40" height="80" rx="3"/>
+      <rect x="40" y="-40" width="40" height="80" rx="3"/>
+
+      <!-- Windows -->
+      <rect x="-25" y="-70" width="50" height="50" rx="25" fill="#6366f1" opacity="0.4"/>
+      <circle cx="-55" cy="-5" r="12" fill="#6366f1" opacity="0.4"/>
+      <circle cx="55" cy="-5" r="12" fill="#6366f1" opacity="0.4"/>
+
+      <!-- Door -->
+      <rect x="-25" y="0" width="50" height="40" rx="25" ry="0" fill="#1e40af"/>
+    </g>
+  </g>
+</svg>

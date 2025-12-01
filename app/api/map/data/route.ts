@@ -1,6 +1,14 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 
+const TOWN_CENTER = {
+  name: 'Stykkishólmur',
+  latitude: 65.0752,
+  longitude: -22.7339,
+  latitudeDelta: 0.05,
+  longitudeDelta: 0.05,
+};
+
 function isWithin48Hours(date: Date): boolean {
   const now = new Date();
   const diff = date.getTime() - now.getTime();
@@ -8,12 +16,52 @@ function isWithin48Hours(date: Date): boolean {
   return hours >= 0 && hours <= 48;
 }
 
+function getEventCoordinates(event: { id: string; isTownEvent: boolean }) {
+  if (event.isTownEvent) {
+    return {
+      latitude: TOWN_CENTER.latitude,
+      longitude: TOWN_CENTER.longitude,
+    };
+  }
+  const hash = event.id
+    .slice(0, 5)
+    .split('')
+    .reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const angle = ((hash % 360) * Math.PI) / 180;
+  const distance = 0.005 + (hash % 10) * 0.001;
+  return {
+    latitude: TOWN_CENTER.latitude + Math.cos(angle) * distance,
+    longitude: TOWN_CENTER.longitude + Math.sin(angle) * distance,
+  };
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const townId = searchParams.get('townId') || 'stykkisholmur';
+    const townIdOrSlug = searchParams.get('townId') || 'stykkisholmur';
     const categoriesParam = searchParams.get('categories');
     const categories = categoriesParam ? categoriesParam.split(',') : [];
+
+    // Look up town by slug or ID
+    const town = await prisma.town.findFirst({
+      where: {
+        OR: [
+          { id: townIdOrSlug },
+          { slug: townIdOrSlug },
+          { name: { contains: townIdOrSlug, mode: 'insensitive' } },
+        ],
+      },
+    });
+
+    const townId = town?.id;
+
+    if (!townId) {
+      return Response.json({
+        places: [],
+        events: [],
+        town: TOWN_CENTER,
+      });
+    }
 
     // Fetch places with coordinates
     const places = await prisma.place.findMany({
@@ -37,11 +85,10 @@ export async function GET(request: NextRequest) {
       take: 100, // Limit for performance
     });
 
-    // Fetch upcoming events (use location from related place if no direct coordinates)
+    // Fetch all events (UI has date filter)
     const events = await prisma.event.findMany({
       where: {
         townId,
-        startsAt: { gte: new Date() },
       },
       select: {
         id: true,
@@ -74,15 +121,16 @@ export async function GET(request: NextRequest) {
       rsvpCounts.map(r => [r.eventId, r._count])
     );
 
-    // Enrich events with computed fields and add mock coordinates for now
+    // Enrich events with computed fields and deterministic coordinates
     const enrichedEvents = events.map((event) => {
       const rsvpCount = rsvpMap[event.id] || 0;
+      const coords = getEventCoordinates(event);
       return {
         id: event.id,
         name: event.title,
         type: event.isTownEvent ? 'TOWN' : event.isFeatured ? 'FEATURED' : 'COMMUNITY',
-        latitude: 65.0752 + (Math.random() - 0.5) * 0.02, // Mock coordinates near town center
-        longitude: -22.7339 + (Math.random() - 0.5) * 0.02,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
         imageUrl: event.imageUrl,
         startDate: event.startsAt.toISOString(),
         location: event.location,
@@ -94,19 +142,19 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // Town center (Stykkishólmur, Iceland)
-    const town = {
-      name: 'Stykkishólmur',
-      latitude: 65.0752,
-      longitude: -22.7339,
+    // Return town data from database if available, fallback to default
+    const townData = town ? {
+      name: town.name,
+      latitude: town.lat ?? TOWN_CENTER.latitude,
+      longitude: town.lng ?? TOWN_CENTER.longitude,
       latitudeDelta: 0.05,
       longitudeDelta: 0.05,
-    };
+    } : TOWN_CENTER;
 
     return Response.json({
       places: mappedPlaces,
       events: enrichedEvents,
-      town,
+      town: townData,
     });
   } catch (error) {
     console.error('Map data error:', error);

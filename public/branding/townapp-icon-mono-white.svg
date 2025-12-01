@@ -1,0 +1,21 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- TownApp Icon: Monochrome White (for dark backgrounds) -->
+
+  <!-- Location Pin Outline -->
+  <path d="M256 48C176.5 48 112 112.5 112 192C112 304 256 464 256 464C256 464 400 304 400 192C400 112.5 335.5 48 256 48Z"
+        fill="white"
+        stroke="white"
+        stroke-width="8"/>
+
+  <!-- Church Spire -->
+  <g fill="#000000">
+    <path d="M256 120L220 180H292L256 120Z"/>
+    <rect x="230" y="180" width="52" height="80" rx="2"/>
+    <rect x="200" y="220" width="30" height="40" rx="2"/>
+    <rect x="282" y="220" width="30" height="40" rx="2"/>
+    <rect x="245" y="200" width="22" height="28" rx="11"/>
+    <circle cx="210" cy="235" r="6"/>
+    <circle cx="302" cy="235" r="6"/>
+    <rect x="245" y="240" width="22" height="20" rx="11" ry="0"/>
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Regular Event Marker: Calendar in blue pin -->
+
+  <!-- Pin shape -->
+  <path d="M16 0C9.4 0 4 5.4 4 12C4 20 16 40 16 40C16 40 28 20 28 12C28 5.4 22.6 0 16 0Z"
+        fill="#3b82f6"
+        stroke="#1e40af"
+        stroke-width="0.5"/>
+
+  <!-- Calendar icon (white) -->
+  <g fill="white">
+    <!-- Calendar body -->
+    <rect x="10" y="9" width="12" height="11" rx="1"/>
+
+    <!-- Calendar header (colored) -->
+    <rect x="10" y="9" width="12" height="3" rx="1" fill="#1e40af"/>
+
+    <!-- Binding rings -->
+    <rect x="12" y="7" width="1.5" height="3" rx="0.5" fill="white"/>
+    <rect x="18.5" y="7" width="1.5" height="3" rx="0.5" fill="white"/>
+
+    <!-- Date grid -->
+    <g fill="#3b82f6">
+      <circle cx="13" cy="15" r="0.8"/>
+      <circle cx="16" cy="15" r="0.8"/>
+      <circle cx="19" cy="15" r="0.8"/>
+      <circle cx="13" cy="17.5" r="0.8"/>
+      <circle cx="16" cy="17.5" r="0.8"/>
+      <circle cx="19" cy="17.5" r="0.8"/>
+    </g>
+  </g>
+</svg>

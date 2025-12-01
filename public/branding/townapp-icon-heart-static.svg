@@ -1,0 +1,21 @@
+<svg width="352" height="448" viewBox="0 0 352 448" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- TownApp Logo: Static Version (for exports) -->
+
+  <!-- Location Pin Base -->
+  <path
+    d="M176 0C79 0 0 79 0 176C0 308 176 448 176 448C176 448 352 308 352 176C352 79 273 0 176 0Z"
+    fill="#3b82f6"
+  />
+
+  <!-- Organic Heart - Smooth, warm, inviting -->
+  <path
+    d="M 176 95
+       C 176 95, 171 90, 164 90
+       C 151 90, 140 101, 140 114
+       C 140 127, 148 140, 176 165
+       C 204 140, 212 127, 212 114
+       C 212 101, 201 90, 188 90
+       C 181 90, 176 95, 176 95 Z"
+    fill="white"
+  />
+</svg>

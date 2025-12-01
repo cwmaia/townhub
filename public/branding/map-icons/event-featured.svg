@@ -1,0 +1,58 @@
+<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Featured/Premium Event: Calendar with gold shimmer border -->
+
+  <defs>
+    <!-- Gold shimmer gradient for border -->
+    <linearGradient id="goldShimmer" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1">
+        <animate attributeName="offset" values="-0.5;1.5" dur="2s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" style="stop-color:#fef3c7;stop-opacity:1">
+        <animate attributeName="offset" values="-0.25;1.75" dur="2s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" style="stop-color:#fbbf24;stop-opacity:1">
+        <animate attributeName="offset" values="0;2" dur="2s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+  </defs>
+
+  <!-- Gold shimmer border (thicker) -->
+  <path d="M16 0C9.4 0 4 5.4 4 12C4 20 16 40 16 40C16 40 28 20 28 12C28 5.4 22.6 0 16 0Z"
+        fill="url(#goldShimmer)"
+        stroke="#d97706"
+        stroke-width="1.5"/>
+
+  <!-- Inner pin shape (blue) -->
+  <path d="M16 1.5C10.2 1.5 5.5 6.2 5.5 12C5.5 19 16 38 16 38C16 38 26.5 19 26.5 12C26.5 6.2 21.8 1.5 16 1.5Z"
+        fill="#3b82f6"
+        stroke="#1e40af"
+        stroke-width="0.3"/>
+
+  <!-- Calendar icon (white) -->
+  <g fill="white">
+    <!-- Calendar body -->
+    <rect x="10" y="9" width="12" height="11" rx="1"/>
+
+    <!-- Calendar header (gold) -->
+    <rect x="10" y="9" width="12" height="3" rx="1" fill="#fbbf24"/>
+
+    <!-- Binding rings -->
+    <rect x="12" y="7" width="1.5" height="3" rx="0.5" fill="white"/>
+    <rect x="18.5" y="7" width="1.5" height="3" rx="0.5" fill="white"/>
+
+    <!-- Date grid -->
+    <g fill="#3b82f6">
+      <circle cx="13" cy="15" r="0.8"/>
+      <circle cx="16" cy="15" r="0.8"/>
+      <circle cx="19" cy="15" r="0.8"/>
+      <circle cx="13" cy="17.5" r="0.8"/>
+      <circle cx="16" cy="17.5" r="0.8"/>
+      <circle cx="19" cy="17.5" r="0.8"/>
+    </g>
+  </g>
+
+  <!-- Premium star badge -->
+  <circle cx="23" cy="8" r="3.5" fill="#fbbf24"/>
+  <path d="M23 6 L23.7 7.8 L25.5 7.8 L24 9 L24.7 10.5 L23 9.5 L21.3 10.5 L22 9 L20.5 7.8 L22.3 7.8 Z"
+        fill="white"/>
+</svg>
