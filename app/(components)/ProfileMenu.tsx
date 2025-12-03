@@ -56,6 +56,7 @@ const ProfileMenu = ({ profile, currentLocale }: ProfileMenuProps) => {
 
   const canAccessAdmin =
     profile?.role === UserRole.SUPER_ADMIN || profile?.role === UserRole.TOWN_ADMIN;
+  const canAccessBusinessDashboard = profile?.role === UserRole.BUSINESS_OWNER;
 
   const handleSignOut = async () => {
     startTransition(async () => {
@@ -199,6 +200,18 @@ const ProfileMenu = ({ profile, currentLocale }: ProfileMenuProps) => {
             }}
           >
             {t("admin")}
+          </DropdownMenuItem>
+        ) : null}
+        {canAccessBusinessDashboard ? (
+          <DropdownMenuItem
+            onClick={() => {
+              const locale = currentLocale;
+              startTransition(() => {
+                router.push(`/${locale}/admin/business`);
+              });
+            }}
+          >
+            Business Dashboard
           </DropdownMenuItem>
         ) : null}
         <DropdownMenuItem

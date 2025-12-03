@@ -17,11 +17,13 @@ import { ActivityTimelineCompact } from "../../../components/dashboard/ActivityT
 import { QuickActionsCompact } from "../../../components/dashboard/QuickActionsCompact";
 import { RevenueSales } from "../../../components/dashboard/RevenueSales";
 import { TownPerformance } from "../../../components/dashboard/TownPerformance";
+import { BusinessPerformance } from "../../../components/dashboard/BusinessPerformance";
 import { RecentNotifications } from "../../../components/dashboard/RecentNotifications";
 import { Users, MapPin, Calendar, Bell, Plus } from "lucide-react";
 
 import { requireRole } from "../../../lib/auth/guards";
 import { resolveAdminTownContext } from "./helpers";
+import { PlaceToVerify, VerificationQueue } from "./VerificationQueue";
 
 const PLACE_TYPES = Object.values(PlaceType);
 const FEATURED_EVENT_TIERS = new Set(["growth", "premium"]);
@@ -287,7 +289,13 @@ export default async function AdminPage({ params }: AdminPageProps) {
     throw new Error("Managed town not found.");
   }
 
-  const [places, events, businesses] = await Promise.all([
+  const [
+    places,
+    events,
+    businesses,
+    verificationPlacesData,
+    verificationCounts,
+  ] = await Promise.all([
     prisma.place.findMany({
       where: { townId: managedTownId },
       orderBy: { name: "asc" },
@@ -328,7 +336,58 @@ export default async function AdminPage({ params }: AdminPageProps) {
       },
       orderBy: { name: "asc" },
     }),
+    prisma.place.findMany({
+      where: {
+        townId: managedTownId,
+        OR: [{ locationVerified: false }, { imageVerified: false }],
+      },
+      orderBy: { name: "asc" },
+      select: {
+        id: true,
+        name: true,
+        address: true,
+        lat: true,
+        lng: true,
+        imageUrl: true,
+        locationVerified: true,
+        imageVerified: true,
+      },
+    }),
+    prisma.$transaction([
+      prisma.place.count({
+        where: {
+          townId: managedTownId,
+          OR: [{ locationVerified: false }, { imageVerified: false }],
+        },
+      }),
+      prisma.place.count({
+        where: {
+          townId: managedTownId,
+          candidateImageUrls: { isEmpty: false },
+          OR: [{ locationVerified: false }, { imageVerified: false }],
+        },
+      }),
+      prisma.place.count({
+        where: {
+          townId: managedTownId,
+          locationVerified: true,
+          imageVerified: true,
+        },
+      }),
+    ]),
   ]);
+
+  const [unverifiedCount, pendingReviewCount, verifiedCount] = verificationCounts;
+  const verificationPlaces: PlaceToVerify[] = verificationPlacesData.map((place) => ({
+    id: place.id,
+    name: place.name,
+    address: place.address,
+    lat: place.lat,
+    lng: place.lng,
+    imageUrl: place.imageUrl,
+    locationVerified: place.locationVerified,
+    imageVerified: place.imageVerified,
+  }));
 
   const townEvents = events.filter((event) => event.isTownEvent);
   const featuredEvents = events.filter((event) => event.isFeatured);
@@ -472,8 +531,12 @@ export default async function AdminPage({ params }: AdminPageProps) {
           subscriptionRevenue="ISK 180K"
         />
 
-        {/* Right: Town Performance */}
-        <TownPerformance />
+        {/* Right: Town/Business Performance based on role */}
+        {auth.profile.role === UserRole.SUPER_ADMIN ? (
+          <TownPerformance />
+        ) : (
+          <BusinessPerformance />
+        )}
       </div>
 
       {/* Two-Column Layout: Recent Activity + Recent Notifications */}
@@ -764,6 +827,7 @@ export default async function AdminPage({ params }: AdminPageProps) {
           />
         </div>
       </section>
+      <VerificationQueue places={verificationPlaces} />
     </div>
   );
 }

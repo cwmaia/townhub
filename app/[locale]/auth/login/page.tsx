@@ -1,19 +1,49 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { FormEvent, useMemo, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import {
+  DEMO_USER_OPTIONS,
+  MOCK_AUTH_COOKIE_NAME,
+} from '@/lib/auth/demo-users';
 
 export default function LoginPage() {
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale ?? 'en';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
   const mockEnabled = process.env.NEXT_PUBLIC_MOCK_AUTH === 'true';
   const warningMessage = mockEnabled ? 'Mock auth is active — any credentials will work.' : null;
+
+  const mockButtons = useMemo(
+    () =>
+      mockEnabled
+        ? DEMO_USER_OPTIONS.map((user) => (
+            <Button
+              key={user.userId}
+              variant="outline"
+              className="h-auto w-full flex-col items-start gap-1 py-3 text-left"
+              onClick={() => {
+                if (typeof document !== 'undefined') {
+                  document.cookie = `${MOCK_AUTH_COOKIE_NAME}=${user.userId}; path=/; max-age=2592000; sameSite=lax`;
+                }
+                router.push(`/${locale}${user.redirectPath}`);
+              }}
+            >
+              <span className="text-base font-semibold text-slate-900">{user.label}</span>
+              <span className="text-xs text-slate-500">{user.description}</span>
+              <span className="text-xs text-slate-400">{user.email}</span>
+            </Button>
+          ))
+        : null,
+    [locale, mockEnabled, router]
+  );
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -47,6 +77,12 @@ export default function LoginPage() {
           {warningMessage}
         </div>
       ) : null}
+      {mockEnabled && (
+        <div className="mt-6 space-y-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
+          <p className="text-sm text-slate-600">Select a demo persona to continue instantly:</p>
+          <div className="space-y-2">{mockButtons}</div>
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <Input
           id="email"

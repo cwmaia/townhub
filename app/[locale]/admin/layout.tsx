@@ -26,13 +26,18 @@ export default async function AdminLayout({ children, params }: AdminLayoutProps
     notFound();
   }
 
-  const auth = await requireRole([UserRole.SUPER_ADMIN, UserRole.TOWN_ADMIN, UserRole.CONTENT_MANAGER]);
+  const auth = await requireRole([UserRole.SUPER_ADMIN, UserRole.TOWN_ADMIN, UserRole.CONTENT_MANAGER, UserRole.BUSINESS_OWNER]);
   if (!auth) {
     redirect(`/${locale}`);
   }
 
   const { profile } = auth;
-  if (profile.role !== UserRole.SUPER_ADMIN && !profile.townId) {
+
+  // Business owners go to their dedicated dashboard
+  if (profile.role === UserRole.BUSINESS_OWNER) {
+    // Allow /admin/business route for business owners
+    // The business page will handle its own data fetching
+  } else if (profile.role !== UserRole.SUPER_ADMIN && !profile.townId) {
     redirect(`/${locale}`);
   }
 
@@ -54,6 +59,11 @@ export default async function AdminLayout({ children, params }: AdminLayoutProps
       label: "Overview",
       href: basePath,
       roles: [UserRole.SUPER_ADMIN, UserRole.TOWN_ADMIN, UserRole.CONTENT_MANAGER],
+    },
+    {
+      label: "My Business",
+      href: `${basePath}/business`,
+      roles: [UserRole.BUSINESS_OWNER],
     },
     {
       label: "Places",
