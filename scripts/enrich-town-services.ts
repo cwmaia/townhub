@@ -31,12 +31,12 @@ const ensureDir = async (dirPath: string) => {
 };
 
 // Curated high-quality images from Unsplash (free to use with attribution)
-// Each URL verified to show the correct subject
+// Each URL verified from unsplash.com search results
 const CURATED_IMAGES: Record<string, string> = {
-  // Police station - police car/station building
-  "police": "https://images.unsplash.com/photo-1557862921-37829c790f19?w=800&q=80",
-  // Fire brigade - fire truck
-  "fire": "https://images.unsplash.com/photo-1599598177991-ec67b5c37318?w=800&q=80",
+  // Police - white police car with lights (from unsplash.com/photos/police-car-at-street-7mqsZsE6FaU)
+  "police": "https://images.unsplash.com/photo-1453873531674-2151bcd01707?w=800&q=80",
+  // Fire brigade - red fire truck in fire station (from unsplash.com/photos/red-fire-truck-parked-inside-a-station-9PFGI1v03g4)
+  "fire": "https://images.unsplash.com/photo-1758506972145-fdcac3daba97?w=800&q=80",
   // Health center/clinic - medical/hospital building
   "health": "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=800&q=80",
   // Ferry terminal/port - ferry boat
