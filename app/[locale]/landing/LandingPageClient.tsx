@@ -687,7 +687,7 @@ const TownCard = () => {
               {/* iframe Preview */}
               <div className="relative h-[500px] w-full">
                 <iframe
-                  src="/en"
+                  src="/en/stykkisholmur"
                   className="h-full w-full border-0"
                   title="Stykkishólmur TownApp Preview"
                 />
