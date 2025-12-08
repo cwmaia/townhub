@@ -3,6 +3,114 @@
     "title": "TownHub Stykkishólmur",
     "description": "Discover services, stays, restaurants, attractions and events in Stykkishólmur, Iceland."
   },
+  "landing": {
+    "hero": {
+      "badge": "Live Data • Real-Time Updates",
+      "title": "Your Town,",
+      "titleHighlight": "Connected",
+      "subtitle": "Discover Stykkishólmur in real time. Events, weather, road conditions, aurora forecasts, and everything happening in your community — all in one place.",
+      "ctaExplore": "Explore Stykkishólmur",
+      "ctaFeatures": "See Features",
+      "trustVercel": "Hosted on Vercel",
+      "trustRealtime": "Real-time data",
+      "trustSecure": "Secure & Private"
+    },
+    "mapShowcase": {
+      "badge": "Core Feature",
+      "title": "Explore with Our Interactive Map",
+      "description": "Our interactive map is at the heart of TownApp. Discover every business, restaurant, hotel, and attraction in Stykkishólmur with real-time information at your fingertips.",
+      "feature1": "Filter by category: restaurants, lodging, attractions, services",
+      "feature2": "See opening hours, contact info, and directions",
+      "feature3": "Real-time event markers for what's happening today",
+      "cta": "Try the Map Now"
+    },
+    "features": {
+      "sectionTitle": "Everything Your Town Needs",
+      "sectionSubtitle": "A complete digital companion for residents and visitors alike",
+      "map": {
+        "title": "Interactive Map",
+        "description": "Explore businesses, attractions, and points of interest with our real-time interactive map. Filter by category, see opening hours, and get directions."
+      },
+      "events": {
+        "title": "Town Events",
+        "description": "Never miss what's happening. From community gatherings to festivals, stay updated with all local events and RSVP directly from the app."
+      },
+      "alerts": {
+        "title": "Safety Alerts",
+        "description": "Receive important notifications about weather warnings, road closures, and emergency updates to keep you and your family safe."
+      },
+      "directory": {
+        "title": "Business Directory",
+        "description": "Find local businesses, restaurants, accommodations, and services. Support your community and discover hidden gems."
+      },
+      "partnerships": {
+        "title": "Premium Partnerships",
+        "description": "Featured businesses and sponsored events that enhance the local experience. Premium visibility for premium services."
+      },
+      "community": {
+        "title": "Community Hub",
+        "description": "Connect with your neighbors, share local updates, and build stronger community bonds through shared experiences."
+      }
+    },
+    "insights": {
+      "liveLabel": "Live Data",
+      "sectionTitle": "Real-Time Town Insights",
+      "sectionSubtitle": "Always know what's happening with live updates from trusted sources",
+      "events": {
+        "label": "This Week",
+        "value": "5 Events"
+      },
+      "weather": {
+        "label": "Current",
+        "value": "12°C Partly Cloudy"
+      },
+      "roads": {
+        "label": "Route 54",
+        "value": "Good Conditions"
+      },
+      "aurora": {
+        "label": "Tonight",
+        "value": "KP 3 - Moderate"
+      },
+      "alerts": {
+        "label": "Status",
+        "value": "No Active Alerts"
+      }
+    },
+    "towns": {
+      "sectionTitle": "Explore Towns",
+      "sectionSubtitle": "Start with Stykkishólmur, our flagship community",
+      "live": "Live",
+      "expand": "Click to preview",
+      "collapse": "Click to close",
+      "comingSoon": "More towns coming soon",
+      "stykkisholmur": {
+        "region": "Snæfellsnes Peninsula, Iceland",
+        "description": "A charming harbor town known for its colorful houses, fresh seafood, and stunning views of Breiðafjörður bay. Your complete digital guide to everything in Stykkishólmur.",
+        "businesses": "40+ Businesses",
+        "events": "Weekly Events",
+        "alerts": "Live Alerts"
+      },
+      "preview": {
+        "title": "Stykkishólmur Preview",
+        "liveData": "Live data",
+        "ctaText": "Experience the full TownApp with all features",
+        "ctaButton": "Go to Stykkishólmur App"
+      }
+    },
+    "cta": {
+      "title": "Bring TownApp to Your Community",
+      "subtitle": "We're expanding to more towns across Iceland. Request TownApp for your community or schedule a demo to learn more.",
+      "requestTown": "Request Your Town",
+      "bookDemo": "Book a Demo",
+      "hostedOn": "Hosted on Vercel"
+    },
+    "footer": {
+      "copyright": "© {year} TownApp. All rights reserved.",
+      "app": "Go to App",
+      "contact": "Contact"
+    }
+  },
   "header": {
     "profileMenu": {
       "signIn": "Sign in",
