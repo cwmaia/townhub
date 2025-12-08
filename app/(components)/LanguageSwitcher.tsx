@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition } from "react";
+import { useTransition, useState, useEffect } from "react";
 import { usePathname, useRouter } from "../../lib/i18n";
 import { locales, type AppLocale } from "../../lib/i18n";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
@@ -20,6 +20,21 @@ const LanguageSwitcher = ({ currentLocale }: LanguageSwitcherProps) => {
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("header.language");
+  const [mounted, setMounted] = useState(false);
+
+  // Only render the Select after mounting to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    // Return a placeholder with the same dimensions to avoid layout shift
+    return (
+      <div className="h-9 w-[140px] rounded-md border border-slate-200 bg-white px-3 py-2 text-sm flex items-center">
+        {languageLabels[currentLocale]}
+      </div>
+    );
+  }
 
   return (
     <Select

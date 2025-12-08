@@ -1,49 +1,66 @@
 'use client';
 
-import Image from "next/image";
 import { useState } from "react";
-import { Maximize2 } from "lucide-react";
 
 type MapWidgetProps = {
   mapUrl: string;
   townName: string;
   onOpenFullMap: () => void;
+  placeCount?: number;
+  eventCount?: number;
 };
 
-const MapWidget = ({ mapUrl, townName, onOpenFullMap }: MapWidgetProps) => {
-  const [isHovered, setIsHovered] = useState(false);
+const MapWidget = ({ mapUrl, townName, onOpenFullMap, placeCount = 0, eventCount = 0 }: MapWidgetProps) => {
+  const [imageError, setImageError] = useState(false);
 
   const handleClick = () => {
-    console.log('MapWidget clicked - opening full map modal');
     onOpenFullMap();
   };
 
   return (
-    <div
-      className="group relative w-full cursor-pointer overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg ring-1 ring-primary/10 transition-all hover:shadow-xl"
+    <button
       onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{ width: '262px', height: '150px' }}
+      className="group relative w-full cursor-pointer overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all hover:shadow-lg text-left"
     >
-      <div className="relative w-full h-full">
-        <Image
-          src={mapUrl}
-          alt={`${townName} map`}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes="262px"
-          priority
-        />
-        {/* Overlay on hover */}
-        <div className={`absolute inset-0 bg-primary/20 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`} />
+      {/* Map image */}
+      <div className="relative h-[200px] w-full bg-gradient-to-br from-sky-100 to-sky-200">
+        {!imageError ? (
+          <img
+            src={mapUrl}
+            alt={`${townName} map`}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-4xl mb-2">🗺️</span>
+            <span className="text-lg font-semibold text-sky-800">{townName}</span>
+            <span className="text-sm text-sky-600">Click to explore</span>
+          </div>
+        )}
+      </div>
 
-        {/* Expand icon */}
-        <div className={`absolute bottom-3 right-3 rounded-full bg-white p-2 shadow-lg transition-all duration-300 ${isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
-          <Maximize2 className="size-4 text-primary" />
+      {/* Overlay content */}
+      <div className="bg-slate-50/50 p-4">
+        <div className="flex items-start justify-between">
+          <div>
+            <h3 className="text-base font-semibold text-slate-900">
+              <span className="mr-1.5">🗺️</span>
+              Interactive Map
+            </h3>
+            <p className="mt-0.5 text-sm text-slate-600">
+              Explore {placeCount} places & {eventCount} events
+            </p>
+          </div>
+          <span className="rounded-full bg-green-500 px-2 py-1 text-[10px] font-bold tracking-wide text-white">
+            NEW
+          </span>
+        </div>
+        <div className="mt-3 self-start rounded-xl bg-[#003580]/10 px-3 py-2 inline-block">
+          <span className="text-sm font-medium text-[#003580]">Click to explore →</span>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 

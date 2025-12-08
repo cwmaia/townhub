@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
@@ -42,6 +42,12 @@ const ProfileMenu = ({ profile, currentLocale }: ProfileMenuProps) => {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sent" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  // Only render Dialog/DropdownMenu after mounting to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const initials = useMemo(() => {
     if (profile?.firstName) {
@@ -106,6 +112,18 @@ const ProfileMenu = ({ profile, currentLocale }: ProfileMenuProps) => {
   };
 
   if (!profile) {
+    // Return placeholder before mounting to avoid hydration mismatch
+    if (!mounted) {
+      return (
+        <Button
+          className="rounded-full bg-primary px-4 py-2 text-sm text-primary-foreground shadow"
+          disabled
+        >
+          {t("signIn")}
+        </Button>
+      );
+    }
+
     return (
       <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>

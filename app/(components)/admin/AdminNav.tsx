@@ -19,22 +19,22 @@ export function AdminNav({ items }: AdminNavProps) {
   const pathname = usePathname();
 
   return (
-    <nav className="mt-6 space-y-1">
+    <nav className="space-y-1">
       {items.map((item) => {
         const isActive = pathname === item.href;
         const className = cn(
-          "flex items-center justify-between rounded-xl px-3 py-2 text-sm font-medium transition",
+          "flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium transition-all",
           isActive
-            ? "bg-primary/10 text-primary"
-            : "text-slate-600 hover:bg-slate-100",
-          item.disabled && !isActive ? "opacity-60 cursor-not-allowed" : ""
+            ? "bg-[#003580]/10 text-[#003580] shadow-sm"
+            : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+          item.disabled && !isActive ? "opacity-50 cursor-not-allowed" : ""
         );
 
         const content = (
           <>
             <span>{item.label}</span>
             {item.badge ? (
-              <span className="rounded-full bg-slate-200 px-2 py-0.5 text-[10px] uppercase tracking-wide text-slate-600">
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] uppercase tracking-wide text-amber-700 font-semibold">
                 {item.badge}
               </span>
             ) : null}

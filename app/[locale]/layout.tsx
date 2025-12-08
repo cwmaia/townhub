@@ -29,7 +29,7 @@ export async function generateMetadata({
   const messages = await getMessages();
 
   const title =
-    (messages?.app?.title as string | undefined) ?? "TownHub Stykkishólmur";
+    (messages?.app?.title as string | undefined) ?? "TownApp Stykkishólmur";
   const description =
     (messages?.app?.description as string | undefined) ??
     "Discover Stykkishólmur in Iceland.";

@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   Dialog,
@@ -29,7 +29,7 @@ type FromHereToDialogProps = {
   presets: DestinationEstimate[];
 };
 
-const icons: Record<TravelMode, JSX.Element> = {
+const icons: Record<TravelMode, React.JSX.Element> = {
   car: <Car className="size-4" />,
   transit: <Train className="size-4" />,
   walk: <Footprints className="size-4" />,
@@ -143,7 +143,7 @@ const FromHereToDialog = ({ open, onOpenChange, origin, presets }: FromHereToDia
               </div>
               <div className="text-right text-sm font-semibold text-primary">
                 {t("duration", {
-                  minutes: destination.durations[mode],
+                  minutes: destination.durations?.[mode] ?? 0,
                 })}
               </div>
             </div>

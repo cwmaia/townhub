@@ -70,7 +70,7 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto mt-12 max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
-      <h1 className="text-2xl font-semibold text-slate-900">TownHub admin login</h1>
+      <h1 className="text-2xl font-semibold text-slate-900">TownApp admin login</h1>
       <p className="mt-2 text-sm text-slate-500">Enter your email and password to continue.</p>
       {warningMessage ? (
         <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">

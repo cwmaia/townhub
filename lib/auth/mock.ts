@@ -1,8 +1,9 @@
+import { cookies } from "next/headers";
 import { prisma } from "../db";
+import { DEMO_USER_OPTIONS, MOCK_AUTH_COOKIE_NAME } from "./demo-users";
 
-const MOCK_USER_ID = process.env.MOCK_AUTH_USER_ID ?? "mock-admin-user";
-const MOCK_EMAIL = process.env.MOCK_AUTH_EMAIL ?? "admin@townhub.local";
 const MOCK_AUTH_ENABLED = process.env.MOCK_AUTH === "true";
+const DEFAULT_DEMO_USER = DEMO_USER_OPTIONS[0];
 
 export type MockAuthContext = {
   user: {
@@ -22,13 +23,29 @@ export async function getMockAuthSession(): Promise<MockAuthContext | null> {
   if (!MOCK_AUTH_ENABLED) {
     return null;
   }
+
+  const cookieStore = await cookies();
+  const cookieUserId = cookieStore.get(MOCK_AUTH_COOKIE_NAME)?.value;
+  const defaultUserId = process.env.MOCK_AUTH_USER_ID;
+  const selectedUser =
+    DEMO_USER_OPTIONS.find((user) => user.userId === cookieUserId) ??
+    DEMO_USER_OPTIONS.find((user) => user.userId === defaultUserId) ??
+    DEFAULT_DEMO_USER;
+
   const profile = await prisma.profile.findUnique({
-    where: { userId: MOCK_USER_ID },
+    where: { userId: selectedUser.userId },
   });
+
+  if (!profile) {
+    return null;
+  }
+
+  const email = profile.email ?? process.env.MOCK_AUTH_EMAIL ?? selectedUser.email;
+
   return {
     user: {
-      id: MOCK_USER_ID,
-      email: MOCK_EMAIL,
+      id: selectedUser.userId,
+      email,
     },
     profile,
   };

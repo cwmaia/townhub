@@ -6,8 +6,8 @@ export const dynamic = "force-dynamic";
 
 type Params = { id: string };
 
-export async function GET(_: NextRequest, { params }: { params: Params }) {
-  const { id } = params;
+export async function GET(_: NextRequest, { params }: { params: Promise<Params> }) {
+  const { id } = await params;
   if (!id) {
     return NextResponse.json({ error: "Missing event id" }, { status: 400 });
   }

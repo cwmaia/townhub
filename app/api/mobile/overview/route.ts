@@ -60,21 +60,15 @@ export async function GET() {
       prisma.business.count({ where: { townId: town.id } }),
     ]);
 
-  const apiBaseUrl = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000").replace(/\/$/, "");
-  const toAbsoluteUrl = (value?: string | null) => {
-    if (!value) return null;
-    if (value.startsWith("http")) return value;
-    const prefix = value.startsWith("/") ? "" : "/";
-    return `${apiBaseUrl}${prefix}${value}`;
-  };
-  const placesWithAbsoluteUrls = places.map((place) => ({
+  // Return relative paths - mobile app's resolveImageUrl() handles conversion to absolute URLs
+  const placesData = places.map((place) => ({
     ...place,
-    imageUrl: toAbsoluteUrl(place.imageUrl),
-    featuredImageUrl: toAbsoluteUrl(place.featuredImageUrl),
+    imageUrl: place.imageUrl,
+    featuredImageUrl: place.featuredImageUrl,
   }));
-  const eventsWithAbsoluteUrls = events.map(({ _count, ...event }) => ({
+  const eventsData = events.map(({ _count, ...event }) => ({
     ...event,
-    imageUrl: toAbsoluteUrl(event.imageUrl),
+    imageUrl: event.imageUrl,
     favoriteCount: _count.favorites,
     rsvpCount: _count.rsvps,
   }));
@@ -100,8 +94,8 @@ export async function GET() {
         eventCount,
         businessCount,
       },
-      places: placesWithAbsoluteUrls,
-      events: eventsWithAbsoluteUrls,
+      places: placesData,
+      events: eventsData,
     },
   });
 }

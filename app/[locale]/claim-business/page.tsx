@@ -2,12 +2,12 @@ import "server-only";
 
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
-import type { AppLocale } from "../../../../lib/i18n";
-import { locales } from "../../../../lib/i18n";
-import { prisma } from "../../../../lib/db";
-import { createSupabaseServerClient } from "../../../../lib/supabase/server";
-import { Button } from "../../../../components/ui/button";
-import { Badge } from "../../../../components/ui/badge";
+import type { AppLocale } from "../../../lib/i18n";
+import { locales } from "../../../lib/i18n";
+import { prisma } from "../../../lib/db";
+import { createSupabaseServerClient } from "../../../lib/supabase/server";
+import { Button } from "../../../components/ui/button";
+import { Badge } from "../../../components/ui/badge";
 
 type ClaimBusinessPageProps = {
   params: Promise<{ locale: AppLocale }>;

@@ -1,5 +1,5 @@
 {
-  "name": "townhub",
+  "name": "townapp",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,9 +8,16 @@
     "start": "next start",
     "lint": "eslint",
     "db:push": "prisma db push",
-    "db:seed": "ts-node --esm --transpile-only database/seed/seed.ts"
+    "db:seed": "ts-node --esm --transpile-only database/seed/seed.ts",
+    "enrich": "npx tsx scripts/enrich-businesses.ts",
+    "enrich:dry": "npx tsx scripts/enrich-businesses.ts --dry-run",
+    "enrich:events": "npx tsx scripts/enrich-events.ts",
+    "enrich:events:dry": "npx tsx scripts/enrich-events.ts --dry-run",
+    "enrich:services": "npx tsx scripts/enrich-town-services.ts",
+    "enrich:services:dry": "npx tsx scripts/enrich-town-services.ts --dry-run"
   },
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.2",
     "@googlemaps/js-api-loader": "^2.0.2",
     "@prisma/client": "^6.18.0",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -33,7 +40,7 @@
     "expo-server-sdk": "^4.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.548.0",
-    "next": "16.0.1",
+    "next": "^16.0.7",
     "next-intl": "^4.4.0",
     "pexels": "^1.4.0",
     "prisma": "^6.18.0",
@@ -55,7 +62,7 @@
     "@types/react-dom": "^19",
     "@types/sharp": "^0.32.0",
     "eslint": "^9",
-    "eslint-config-next": "16.0.1",
+    "eslint-config-next": "^16.0.7",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6",

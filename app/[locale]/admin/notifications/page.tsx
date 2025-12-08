@@ -3,7 +3,7 @@ import "server-only";
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { InvoiceStatus, UserRole } from "@prisma/client";
+import { InvoiceStatus, UserRole, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { locales, type AppLocale } from "@/lib/i18n";
 import { requireRole } from "@/lib/auth/guards";
@@ -57,6 +57,7 @@ const createNotificationDraftAction = async (formData: FormData) => {
       senderId: auth.profile.id,
       townId,
       status: "draft",
+      targetType: "TOWN",
       targetFilter: { segment: "all" },
     },
   });
@@ -109,20 +110,24 @@ const updateNotificationAction = async (formData: FormData) => {
     throw new Error("Only drafts can be edited.");
   }
 
-  const existingData =
-    typeof existing.data === "object" && existing.data !== null ? { ...existing.data } : {};
+  const existingData: Record<string, unknown> =
+    typeof existing.data === "object" && existing.data !== null && !Array.isArray(existing.data)
+      ? { ...existing.data }
+      : {};
   if (deeplink) {
     existingData.deeplink = deeplink;
   } else {
     delete existingData.deeplink;
   }
-  const dataPayload = Object.keys(existingData).length ? existingData : null;
-  const existingFilter =
-    typeof existing.targetFilter === "object" && existing.targetFilter !== null
+  const dataPayload: Prisma.InputJsonValue | typeof Prisma.JsonNull = Object.keys(existingData).length
+    ? (existingData as Prisma.InputJsonValue)
+    : Prisma.JsonNull;
+  const existingFilter: Record<string, unknown> =
+    typeof existing.targetFilter === "object" && existing.targetFilter !== null && !Array.isArray(existing.targetFilter)
       ? { ...existing.targetFilter }
       : {};
-  const targetFilter =
-    targetType === "TOWN" ? { ...existingFilter, segment } : null;
+  const targetFilter: Prisma.InputJsonValue | typeof Prisma.JsonNull =
+    targetType === "TOWN" ? ({ ...existingFilter, segment } as Prisma.InputJsonValue) : Prisma.JsonNull;
 
   await prisma.notification.update({
     where: { id },
@@ -173,7 +178,7 @@ const sendNotificationAction = async (
   }
 
   let tokens: { id: string; token: string; userId: string }[] = [];
-  let businessToUpdate: typeof notification.business | null = null;
+  let businessToUpdate: { id: string } | null = null;
   const targetFilterData = notification.targetFilter as { segment?: string } | null;
   const segment = targetFilterData?.segment ?? "all";
   const getTownTokenFilter = () => {
@@ -460,7 +465,7 @@ export default async function NotificationsPage({ params }: NotificationsPagePro
     >,
   );
 
-  const outstandingStatuses = new Set([InvoiceStatus.ISSUED, InvoiceStatus.OVERDUE]);
+  const outstandingStatuses = new Set<InvoiceStatus>([InvoiceStatus.ISSUED, InvoiceStatus.OVERDUE]);
   const totalOutstanding = invoiceSummaries.reduce(
     (sum, summary) =>
       outstandingStatuses.has(summary.status)

@@ -1,11 +1,15 @@
 import type { Event, Place, PlaceType, UserRole } from "@prisma/client";
 import type { AppLocale } from "../../lib/i18n";
 
-export type TownHubPlace = Place & {
+export type TownAppPlace = Place & {
   imageUrl: string | null;
 };
 
-export type TownHubEvent = Event;
+export type TownAppEvent = Event;
+
+// Legacy aliases for backward compatibility
+export type TownHubPlace = TownAppPlace;
+export type TownHubEvent = TownAppEvent;
 
 export type FilterState = {
   type: PlaceType | "ALL";

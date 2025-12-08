@@ -449,38 +449,38 @@ export default async function AdminPage({ params }: AdminPageProps) {
       {/* Dashboard Header with Quick Actions */}
       <div className="flex items-start justify-between gap-4">
         <header className="space-y-0.5">
-          <p className="text-xs uppercase tracking-wide text-slate-400">Town overview</p>
+          <p className="text-[10px] uppercase tracking-wide text-slate-400">Town overview</p>
           <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-sm text-[#003580] font-medium">
             {managedTown?.name ?? "Your town"}
           </p>
         </header>
 
-        {/* Quick Actions - Industry Standard Plus Icon Pattern */}
+        {/* Quick Actions - Brand Blue accent */}
         <div className="flex items-center gap-2">
           <a
             href="#create-place"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200
-                       hover:border-slate-300 hover:bg-slate-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200
+                       hover:border-[#003580]/30 hover:bg-[#003580]/5 transition-colors"
           >
-            <Plus className="w-4 h-4 text-slate-600" />
+            <Plus className="w-4 h-4 text-[#003580]" />
             <span className="text-sm font-medium text-slate-700">Place</span>
           </a>
           <a
             href="#create-event"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200
-                       hover:border-slate-300 hover:bg-slate-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200
+                       hover:border-[#003580]/30 hover:bg-[#003580]/5 transition-colors"
           >
-            <Plus className="w-4 h-4 text-slate-600" />
+            <Plus className="w-4 h-4 text-[#003580]" />
             <span className="text-sm font-medium text-slate-700">Event</span>
           </a>
           <a
             href="/admin/notifications"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200
-                       hover:border-slate-300 hover:bg-slate-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#003580] text-white
+                       hover:bg-[#003580]/90 transition-colors"
           >
-            <Plus className="w-4 h-4 text-slate-600" />
-            <span className="text-sm font-medium text-slate-700">Alert</span>
+            <Plus className="w-4 h-4" />
+            <span className="text-sm font-medium">Alert</span>
           </a>
         </div>
       </div>
@@ -646,7 +646,7 @@ export default async function AdminPage({ params }: AdminPageProps) {
             <Input id="tags" name="tags" placeholder="Hotel, Spa, $$" />
           </div>
           <div className="md:col-span-2 flex justify-end">
-            <Button type="submit" className="rounded-full bg-primary px-6 text-white">
+            <Button type="submit" className="rounded-full bg-[#003580] hover:bg-[#003580]/90 px-6 text-white">
               Create place
             </Button>
           </div>
@@ -725,7 +725,7 @@ export default async function AdminPage({ params }: AdminPageProps) {
               </div>
             </div>
             <div className="flex justify-end">
-              <Button type="submit" className="rounded-full bg-primary px-6 text-white">
+              <Button type="submit" className="rounded-full bg-[#003580] hover:bg-[#003580]/90 px-6 text-white">
                 Publish town event
               </Button>
             </div>

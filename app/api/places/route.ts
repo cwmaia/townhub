@@ -112,22 +112,9 @@ export async function GET(request: Request) {
     prisma.place.count({ where }),
   ]);
 
-  const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000").replace(/\/$/, "");
-  const toAbsoluteUrl = (value?: string | null) => {
-    if (!value) return null;
-    if (value.startsWith("http")) return value;
-    const prefix = value.startsWith("/") ? "" : "/";
-    return `${API_URL}${prefix}${value}`;
-  };
-  const dataWithAbsoluteUrls = data.map((place) => ({
-    ...place,
-    imageUrl: toAbsoluteUrl(place.imageUrl),
-    featuredImageUrl: toAbsoluteUrl(place.featuredImageUrl),
-    galleryUrls: place.galleryUrls.map((url) => toAbsoluteUrl(url) ?? url),
-  }));
-
+  // Return relative paths - Next.js Image component handles them correctly
   return NextResponse.json({
-    data: dataWithAbsoluteUrls,
+    data,
     meta: {
       total,
       limit,

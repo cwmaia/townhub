@@ -9,6 +9,8 @@ export const getTownServices = (): ScrapedPlace[] => [
     address: "Hafnargata 3, 340 Stykkishólmur, Iceland",
     phone: "+354 444 2111",
     tags: ["Emergency", "Community"],
+    lat: 65.0754,
+    lng: -22.7295,
   },
   {
     name: "Stykkishólmur Fire Brigade",
@@ -18,6 +20,8 @@ export const getTownServices = (): ScrapedPlace[] => [
     address: "Austurgata 7, 340 Stykkishólmur, Iceland",
     phone: "+354 861 6311",
     tags: ["Emergency", "Rescue"],
+    lat: 65.0748,
+    lng: -22.7268,
   },
   {
     name: "Heilsugæsla Stykkishólms Health Center",
@@ -28,6 +32,8 @@ export const getTownServices = (): ScrapedPlace[] => [
     phone: "+354 432 2400",
     website: "https://hss.is",
     tags: ["Clinic", "Pharmacy"],
+    lat: 65.0739,
+    lng: -22.7242,
   },
   {
     name: "Baldur Ferry Terminal",
@@ -37,6 +43,8 @@ export const getTownServices = (): ScrapedPlace[] => [
     address: "Suðurgata 5, 340 Stykkishólmur, Iceland",
     website: "https://seatours.is",
     tags: ["Transport", "Ferry"],
+    lat: 65.0758,
+    lng: -22.7352,
   },
   {
     name: "Icelandic Post Office - Stykkishólmur",
@@ -46,5 +54,7 @@ export const getTownServices = (): ScrapedPlace[] => [
     address: "Austurgata 13, 340 Stykkishólmur, Iceland",
     website: "https://postur.is",
     tags: ["Logistics", "Mail"],
+    lat: 65.0745,
+    lng: -22.7255,
   },
 ];

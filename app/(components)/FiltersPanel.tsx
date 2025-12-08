@@ -4,11 +4,10 @@ import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "../../components/ui/button";
 import { Separator } from "../../components/ui/separator";
-import MapWidget from "./MapWidget";
 import type { FilterState } from "./types";
 
 const ratingOptions = [4.5, 4.0, 3.5];
-const distanceOptions: FilterState["distance"][] = ["0-1", "1-3", "3-10"];
+const distanceOptions = ["0-1", "1-3", "3-10"] as const satisfies NonNullable<FilterState["distance"]>[];
 const priceOptions: FilterState["price"][] = ["$", "$$", "$$$"];
 
 type FiltersPanelProps = {
@@ -16,12 +15,9 @@ type FiltersPanelProps = {
   availableTags: string[];
   onUpdate: (filters: Partial<FilterState>) => void;
   onReset: () => void;
-  mapUrl: string;
-  townName: string;
-  onOpenFullMap: () => void;
 };
 
-const FiltersPanel = ({ filters, availableTags, onUpdate, onReset, mapUrl, townName, onOpenFullMap }: FiltersPanelProps) => {
+const FiltersPanel = ({ filters, availableTags, onUpdate, onReset }: FiltersPanelProps) => {
   const t = useTranslations("filters");
 
   const renderedTags = useMemo(() => availableTags.slice(0, 12), [availableTags]);
@@ -36,9 +32,6 @@ const FiltersPanel = ({ filters, availableTags, onUpdate, onReset, mapUrl, townN
 
   return (
     <aside className="sticky top-20 z-30 flex w-[260px] max-h-[calc(100vh-5rem)] flex-col gap-6 self-start">
-      <div className="flex-shrink-0">
-        <MapWidget mapUrl={mapUrl} townName={townName} onOpenFullMap={onOpenFullMap} />
-      </div>
       <div className="flex w-full flex-col gap-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-lg overflow-y-auto">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
@@ -90,7 +83,7 @@ const FiltersPanel = ({ filters, availableTags, onUpdate, onReset, mapUrl, townN
               }
             >
               {(() => {
-                const [from, to] = value.split("-");
+                const [from, to] = value.split("-") as [string, string];
                 if (from === "0") return t("lessThanKm", { to });
                 if (to === "10") return t("kmOption", { from, to });
                 return t("kmOption", { from, to });

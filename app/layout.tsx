@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TownHub | Stykkishólmur",
+  title: "TownApp | Stykkishólmur",
   description:
     "Discover services, stays, restaurants, attractions and events in Stykkishólmur, Iceland.",
 };

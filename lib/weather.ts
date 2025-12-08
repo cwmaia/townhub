@@ -14,6 +14,8 @@ export type WeatherForecast = {
   temperature: number | null;
   description: string;
   windSpeed: number | null;
+  humidity: number | null;
+  visibility: number | null;
   icon: string;
   daily: DailyForecast[];
 };
@@ -23,6 +25,8 @@ type OpenMeteoResponse = {
     temperature_2m: number;
     wind_speed_10m: number;
     weather_code: number;
+    relative_humidity_2m?: number;
+    visibility?: number;
   };
   daily?: {
     time: string[];
@@ -70,10 +74,10 @@ export const getWeatherForecast = async (
   const params = new URLSearchParams({
     latitude: lat.toString(),
     longitude: lng.toString(),
-    current: ["temperature_2m", "wind_speed_10m", "weather_code"].join(","),
+    current: ["temperature_2m", "wind_speed_10m", "weather_code", "relative_humidity_2m", "visibility"].join(","),
     daily: ["temperature_2m_max", "temperature_2m_min", "weather_code"].join(","),
     timezone: "auto",
-    forecast_days: "4", // Get 4 days to show next 3 days
+    forecast_days: "6", // Get 6 days to show 5-day forecast
   });
 
   try {
@@ -94,15 +98,17 @@ export const getWeatherForecast = async (
         temperature: null,
         description: "No data",
         windSpeed: null,
+        humidity: null,
+        visibility: null,
         icon: "cloud",
         daily: [],
       };
     }
 
-    // Parse daily forecast (skip today, get next 3 days)
+    // Parse daily forecast (skip today, get next 5 days)
     const dailyForecasts: DailyForecast[] = [];
     if (daily && daily.time.length > 1) {
-      for (let i = 1; i <= 3 && i < daily.time.length; i++) {
+      for (let i = 1; i <= 5 && i < daily.time.length; i++) {
         dailyForecasts.push({
           date: daily.time[i],
           maxTemp: Math.round(daily.temperature_2m_max[i]),
@@ -116,6 +122,8 @@ export const getWeatherForecast = async (
     return {
       temperature: current.temperature_2m,
       windSpeed: current.wind_speed_10m,
+      humidity: current.relative_humidity_2m ?? null,
+      visibility: current.visibility ? Math.round(current.visibility / 1000) : null, // Convert meters to km
       description: weatherCodeMap[current.weather_code] ?? "Weather update",
       icon: selectWeatherIcon(current.weather_code),
       daily: dailyForecasts,
@@ -126,6 +134,8 @@ export const getWeatherForecast = async (
       temperature: null,
       description: "Weather unavailable",
       windSpeed: null,
+      humidity: null,
+      visibility: null,
       icon: "cloud-off",
       daily: [],
     };

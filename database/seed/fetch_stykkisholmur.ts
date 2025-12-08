@@ -23,6 +23,8 @@ export type SeedEvent = {
   startsAt: string;
   endsAt: string;
   location: string;
+  latitude: number;
+  longitude: number;
 };
 
 const downloadDir = path.resolve("public/media");
@@ -97,6 +99,13 @@ export const stykkisholmurImageManifest: Record<string, string> = {
     "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=800",
 };
 
+// Helper to create dynamic dates relative to now for testing
+const hoursFromNow = (hours: number) => {
+  const date = new Date();
+  date.setHours(date.getHours() + hours);
+  return date.toISOString();
+};
+
 export const stykkisholmurEvents: SeedEvent[] = [
   {
     title: "Breiðafjörður Seafood Festival",
@@ -104,9 +113,11 @@ export const stykkisholmurEvents: SeedEvent[] = [
       "Taste freshly landed shellfish, meet local chefs, and join harborfront cooking demos celebrating the bounty of Breiðafjörður.",
     imageUrl:
       "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800",
-    startsAt: new Date("2025-07-12T11:00:00Z").toISOString(),
-    endsAt: new Date("2025-07-12T20:00:00Z").toISOString(),
+    startsAt: hoursFromNow(2), // Happening in 2 hours (within_24h)
+    endsAt: hoursFromNow(11),
     location: "Harbor Square",
+    latitude: 65.0752,
+    longitude: -22.7339,
   },
   {
     title: "Midnight Sun Kayak Tour",
@@ -114,9 +125,11 @@ export const stykkisholmurEvents: SeedEvent[] = [
       "Guided paddle through basalt islands, with stories of Flatey and seabird colonies under the glow of the midnight sun.",
     imageUrl:
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=800",
-    startsAt: new Date("2025-06-21T22:30:00Z").toISOString(),
-    endsAt: new Date("2025-06-22T01:00:00Z").toISOString(),
+    startsAt: hoursFromNow(-1), // Started 1 hour ago (happening_now)
+    endsAt: hoursFromNow(2),
     location: "Bæjartröð Slipway",
+    latitude: 65.0745,
+    longitude: -22.7285,
   },
   {
     title: "Helgafell Sunrise Walk",
@@ -124,9 +137,11 @@ export const stykkisholmurEvents: SeedEvent[] = [
       "Early morning hike to the sacred hill with a local storyteller sharing folktales and panoramic viewpoints.",
     imageUrl:
       "https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=800",
-    startsAt: new Date("2025-08-03T04:30:00Z").toISOString(),
-    endsAt: new Date("2025-08-03T07:30:00Z").toISOString(),
+    startsAt: hoursFromNow(36), // In 36 hours (within_48h)
+    endsAt: hoursFromNow(39),
     location: "Helgafell Trailhead",
+    latitude: 65.0631,
+    longitude: -22.729,
   },
   {
     title: "Norwegian House Museum Night",
@@ -134,9 +149,11 @@ export const stykkisholmurEvents: SeedEvent[] = [
       "Evening tours of the historic 1828 timber house with candle-lit displays, traditional Icelandic stories, and live folk music.",
     imageUrl:
       "https://images.unsplash.com/photo-1564221710304-0b37c8b9d729?q=80&w=800",
-    startsAt: new Date("2025-07-26T20:00:00Z").toISOString(),
-    endsAt: new Date("2025-07-26T23:00:00Z").toISOString(),
+    startsAt: hoursFromNow(96), // In 4 days (within_week)
+    endsAt: hoursFromNow(99),
     location: "Norwegian House",
+    latitude: 65.0772,
+    longitude: -22.7287,
   },
 ];
 

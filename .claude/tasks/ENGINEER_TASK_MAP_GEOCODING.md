@@ -1,234 +1,238 @@
-# Engineer Task: Implement Google Maps Geocoding for Map Locations
+# Engineer Task: Integrate Geocoding for Map Locations
 
-**Priority:** P0 - Critical (Killer Feature)
-**Status:** 🔴 TODO
-**Depends On:** Google Maps API Key (already configured in app.json)
+**Priority:** P1 - High
+**Status:** 🟡 IN PROGRESS (Task 1 Complete)
+**Depends On:** Google Maps API Key (already configured)
 
 ---
 
 ## Context
 
-The Interactive Map currently uses:
-- **Places:** Coordinates from database (`lat`/`lng` fields) - mostly set to town center
-- **Events:** Deterministic coordinates based on event ID hash (not real locations)
-
-We need real, accurate locations for all markers based on their addresses using Google Maps Geocoding API.
+The Interactive Map needs real, accurate locations for all markers. The geocoding utility has been implemented, but it needs to be integrated with place/event creation and existing data needs to be backfilled.
 
 ---
 
-## Current State
+## Completed Work
 
-### Places
-File: `/townhub/app/api/map/data/route.ts`
-```typescript
-// Places have lat/lng from DB, but many are set to town center (65.074, -22.73)
-const places = await prisma.place.findMany({
-  where: { townId, lat: { not: null }, lng: { not: null } },
-  // ...
-});
-```
+### ✅ Task 1: Geocoding Utility (DONE)
 
-### Events
+**File:** `/townhub/lib/google.ts`
+
+The following functions have been added:
+
 ```typescript
-// Events use fake deterministic coordinates
-function getEventCoordinates(event: { id: string; isTownEvent: boolean }) {
-  // Returns hash-based coordinates around town center
-}
+// Geocode a single address
+export async function geocodeAddress(address: string): Promise<GeocodingResult | null>
+
+// Batch geocode with rate limiting
+export async function geocodeAddresses(addresses: string[], delayMs = 100): Promise<Map<string, GeocodingResult>>
 ```
 
 ---
 
-## Implementation Tasks
+## Remaining Tasks
 
-### Task 1: Create Geocoding Utility
+### Task 2: Auto-Geocode on Place Creation/Update
 
-**New File:** `/townhub/lib/geocoding.ts`
+**Priority:** P1
+
+When a place is created or updated in the CMS with an address but no coordinates, automatically geocode.
+
+**File to modify:** `/townhub/app/[locale]/admin/page.tsx` or wherever places are created
+
+**Implementation:**
 
 ```typescript
-const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+import { geocodeAddress } from "@/lib/google";
 
-interface GeocodingResult {
-  lat: number;
-  lng: number;
-  formattedAddress: string;
-}
-
-export async function geocodeAddress(address: string): Promise<GeocodingResult | null> {
-  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${GOOGLE_MAPS_API_KEY}`;
-
-  const response = await fetch(url);
-  const data = await response.json();
-
-  if (data.status === 'OK' && data.results.length > 0) {
-    const location = data.results[0].geometry.location;
-    return {
-      lat: location.lat,
-      lng: location.lng,
-      formattedAddress: data.results[0].formatted_address,
-    };
+// Before saving a place:
+async function handleSavePlace(placeData) {
+  // Auto-geocode if address exists but coords don't
+  if (placeData.address && (!placeData.lat || !placeData.lng)) {
+    const coords = await geocodeAddress(placeData.address);
+    if (coords) {
+      placeData.lat = coords.lat;
+      placeData.lng = coords.lng;
+    }
   }
-  return null;
-}
 
-// Batch geocoding with rate limiting
-export async function geocodeAddresses(addresses: string[]): Promise<Map<string, GeocodingResult>> {
-  const results = new Map();
-  for (const address of addresses) {
-    const result = await geocodeAddress(address);
-    if (result) results.set(address, result);
-    await new Promise(resolve => setTimeout(resolve, 100)); // Rate limit
-  }
-  return results;
+  // Save to DB...
 }
 ```
 
-### Task 2: Add Geocoding to Place/Event Creation
+**Acceptance Criteria:**
+- [ ] New places with addresses get auto-geocoded
+- [ ] Updated places with changed addresses get re-geocoded
+- [ ] Places with existing coords are not re-geocoded
+- [ ] Geocoding failures don't block place creation
 
-When a place or event is created/updated in the CMS, automatically geocode the address:
+---
 
-**File:** `/townhub/app/api/places/route.ts` (or wherever places are created)
+### Task 3: Auto-Geocode on Event Creation/Update
+
+**Priority:** P1
+
+Same as Task 2 but for events. Events have a `location` field that should be geocoded.
+
+**File to modify:** Event creation/update handlers
+
+**Implementation:**
 
 ```typescript
-import { geocodeAddress } from '@/lib/geocoding';
-
-// On create/update:
-if (data.address && (!data.lat || !data.lng)) {
-  const coords = await geocodeAddress(data.address);
-  if (coords) {
-    data.lat = coords.lat;
-    data.lng = coords.lng;
+// Before saving an event:
+async function handleSaveEvent(eventData) {
+  if (eventData.location && (!eventData.latitude || !eventData.longitude)) {
+    const coords = await geocodeAddress(eventData.location);
+    if (coords) {
+      eventData.latitude = coords.lat;
+      eventData.longitude = coords.lng;
+    }
   }
 }
 ```
 
-### Task 3: Backfill Existing Data
+**Acceptance Criteria:**
+- [ ] New events with locations get auto-geocoded
+- [ ] Town events default to town center if geocoding fails
+- [ ] Geocoding failures don't block event creation
 
-Create a one-time script to geocode existing places/events:
+---
 
-**New File:** `/townhub/scripts/geocode-existing.ts`
+### Task 4: Backfill Script for Existing Data
+
+**Priority:** P2
+
+Create a one-time script to geocode existing places and events that have addresses but no real coordinates.
+
+**New File:** `/townhub/scripts/geocode-backfill.ts`
 
 ```typescript
-import { prisma } from '@/lib/db';
-import { geocodeAddress } from '@/lib/geocoding';
+import { prisma } from "@/lib/db";
+import { geocodeAddress } from "@/lib/google";
 
-async function backfillCoordinates() {
-  // Get places without real coordinates (at town center)
+const TOWN_CENTER = { lat: 65.0752, lng: -22.7339 };
+
+async function backfillPlaces() {
+  // Find places at town center (placeholder) or without coords
   const places = await prisma.place.findMany({
     where: {
+      address: { not: null },
       OR: [
-        { lat: 65.074, lng: -22.73 }, // Town center placeholder
         { lat: null },
+        { lat: 65.074 }, // Approx town center - placeholder value
       ],
     },
   });
 
-  for (const place of places) {
-    if (place.address) {
-      const coords = await geocodeAddress(place.address);
-      if (coords) {
-        await prisma.place.update({
-          where: { id: place.id },
-          data: { lat: coords.lat, lng: coords.lng },
-        });
-        console.log(`Updated ${place.name}: ${coords.lat}, ${coords.lng}`);
-      }
-    }
-    await new Promise(r => setTimeout(r, 200)); // Rate limit
-  }
+  console.log(`Found ${places.length} places to geocode`);
 
-  // Same for events with location field
+  for (const place of places) {
+    if (!place.address) continue;
+
+    const coords = await geocodeAddress(place.address);
+    if (coords) {
+      await prisma.place.update({
+        where: { id: place.id },
+        data: { lat: coords.lat, lng: coords.lng },
+      });
+      console.log(`✓ ${place.name}: ${coords.lat}, ${coords.lng}`);
+    } else {
+      console.log(`✗ ${place.name}: geocoding failed`);
+    }
+
+    // Rate limit: 100ms between requests
+    await new Promise(r => setTimeout(r, 100));
+  }
+}
+
+async function backfillEvents() {
   const events = await prisma.event.findMany({
-    where: { location: { not: null } },
+    where: {
+      location: { not: null },
+      latitude: null,
+    },
   });
 
-  // ... similar logic
+  console.log(`Found ${events.length} events to geocode`);
+
+  for (const event of events) {
+    if (!event.location) continue;
+
+    const coords = await geocodeAddress(event.location);
+    if (coords) {
+      await prisma.event.update({
+        where: { id: event.id },
+        data: { latitude: coords.lat, longitude: coords.lng },
+      });
+      console.log(`✓ ${event.title}: ${coords.lat}, ${coords.lng}`);
+    } else if (event.isTownEvent) {
+      // Town events fallback to town center
+      await prisma.event.update({
+        where: { id: event.id },
+        data: { latitude: TOWN_CENTER.lat, longitude: TOWN_CENTER.lng },
+      });
+      console.log(`~ ${event.title}: using town center (fallback)`);
+    }
+
+    await new Promise(r => setTimeout(r, 100));
+  }
 }
 
-backfillCoordinates();
-```
-
-### Task 4: Update Event Location Storage
-
-Add `lat`/`lng` columns to Event model if not present:
-
-**File:** `/townhub/database/schema.prisma`
-
-```prisma
-model Event {
-  // ... existing fields
-  lat       Float?
-  lng       Float?
-  // ...
+async function main() {
+  console.log("Starting geocoding backfill...\n");
+  await backfillPlaces();
+  console.log("\n");
+  await backfillEvents();
+  console.log("\nBackfill complete!");
 }
+
+main().catch(console.error);
 ```
 
-Then update the map API to use event coordinates:
-
-```typescript
-// In /api/map/data/route.ts
-const enrichedEvents = events.map((event) => ({
-  // ...
-  latitude: event.lat ?? getEventCoordinates(event).latitude,
-  longitude: event.lng ?? getEventCoordinates(event).longitude,
-  // ...
-}));
+**To run:**
+```bash
+npx ts-node scripts/geocode-backfill.ts
 ```
+
+**Acceptance Criteria:**
+- [ ] Script identifies places/events needing geocoding
+- [ ] Successfully geocodes addresses via Google API
+- [ ] Rate limiting prevents API quota issues
+- [ ] Progress is logged to console
+- [ ] Town events without geocoding results get town center
 
 ---
 
 ## Environment Setup
 
-Add to `.env`:
-```
+Ensure `GOOGLE_MAPS_API_KEY` is set in `.env`:
+
+```env
 GOOGLE_MAPS_API_KEY=your_api_key_here
 ```
 
-The mobile app already has the key in `app.json`:
-```json
-"android": {
-  "config": {
-    "googleMaps": {
-      "apiKey": "AIzaSyA3MSCsqQr282qPM52kjTCiHp8VQT91XNQ"
-    }
-  }
-}
-```
+The mobile app already has the key configured in `app.json`.
 
 ---
 
-## Acceptance Criteria
+## Testing Checklist
 
-- [ ] Places show at their real addresses on the map
-- [ ] Events show at their venue locations
-- [ ] New places/events are auto-geocoded on creation
-- [ ] Existing data is backfilled with real coordinates
-- [ ] Geocoding errors are handled gracefully (fallback to town center)
-- [ ] Rate limiting prevents API quota issues
+After implementation:
+
+1. [ ] Create a new place with address in CMS → verify lat/lng are set
+2. [ ] Create a new event with location → verify coordinates are set
+3. [ ] Run backfill script → verify existing items get real coordinates
+4. [ ] Open mobile map → verify markers are at correct locations
+5. [ ] Verify no API quota issues (check Google Cloud Console)
 
 ---
 
-## Files to Create/Modify
+## Files Summary
 
 ```
 /townhub/
-├── lib/
-│   └── geocoding.ts              # NEW - Geocoding utility
-├── scripts/
-│   └── geocode-existing.ts       # NEW - Backfill script
-├── database/
-│   └── schema.prisma             # MODIFY - Add lat/lng to Event
-├── app/api/
-│   ├── places/route.ts           # MODIFY - Auto-geocode on create
-│   ├── events/route.ts           # MODIFY - Auto-geocode on create
-│   └── map/data/route.ts         # MODIFY - Use real event coords
-└── .env                          # MODIFY - Add API key
+├── lib/google.ts                    # ✅ DONE - Geocoding utility
+├── app/[locale]/admin/page.tsx      # TODO - Auto-geocode places
+├── [event creation handler]         # TODO - Auto-geocode events
+└── scripts/geocode-backfill.ts      # TODO - Backfill script
 ```
-
----
-
-## Testing
-
-1. Create a new place with address in CMS → verify coordinates are set
-2. Create a new event with location → verify coordinates are set
-3. Run backfill script → verify existing items get real coordinates
-4. Open map → verify markers are at correct locations (not all clustered at town center)

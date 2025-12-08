@@ -174,6 +174,7 @@ export default async function LocalePage({
     width: 600,
     height: 300,
     zoom: 13,
+    maptype: "terrain", // Note: hybrid/satellite not available in EEA regions
   });
   const destinations = await fetchDestinations(DEFAULT_CENTER);
 

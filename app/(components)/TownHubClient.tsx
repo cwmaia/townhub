@@ -10,8 +10,9 @@ import {
 } from "react";
 import type { PlaceType } from "@prisma/client";
 import Hero from "./Hero";
-import EventsRail from "./EventsRail";
+import WhatsHappening from "./WhatsHappening";
 import WeatherWidget from "./StickyTopInfo";
+import MapWidget from "./MapWidget";
 import FiltersPanel from "./FiltersPanel";
 import ResultsTabs, { type TabKey } from "./Tabs";
 import ResultsGrid from "./ResultsGrid";
@@ -148,16 +149,24 @@ const TownHubClient = ({
   return (
     <div className="mx-auto w-full max-w-6xl px-6 pb-24">
       <Hero townName={townName} firstName={profile?.firstName} />
-      <EventsRail events={events} />
+      <WhatsHappening events={events} />
       <WeatherWidget weather={weather} auroraData={auroraData} townCenter={townCenter} />
+
+      {/* Interactive Map Card - matching mobile app design */}
+      <div className="mt-6">
+        <MapWidget
+          mapUrl={mapUrl}
+          townName={townName}
+          onOpenFullMap={() => setMapModalOpen(true)}
+          placeCount={totalPlaces}
+          eventCount={events.length}
+        />
+      </div>
 
       <div className="mt-10 grid gap-6 md:grid-cols-[260px_auto]">
         <FiltersPanel
           filters={filters}
           availableTags={tags}
-          mapUrl={mapUrl}
-          townName={townName}
-          onOpenFullMap={() => setMapModalOpen(true)}
           onReset={() => {
             setFilters(createDefaultFilters());
           }}
