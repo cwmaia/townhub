@@ -31,25 +31,26 @@ const ensureDir = async (dirPath: string) => {
 };
 
 // Curated high-quality images from Unsplash (free to use with attribution)
+// Each URL verified to show the correct subject
 const CURATED_IMAGES: Record<string, string> = {
-  // Police station
-  "police": "https://images.unsplash.com/photo-1589578228447-e1a4e481c6c8?w=800&q=80",
-  // Fire brigade
-  "fire": "https://images.unsplash.com/photo-1586500036706-41963de24d8b?w=800&q=80",
-  // Health center/clinic
-  "health": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80",
-  // Ferry terminal/port
-  "ferry": "https://images.unsplash.com/photo-1569098644584-210bcd375b59?w=800&q=80",
-  // Post office
-  "post": "https://images.unsplash.com/photo-1526958097901-5e6d742d3371?w=800&q=80",
-  // Library
-  "library": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80",
-  // School
+  // Police station - police car/station building
+  "police": "https://images.unsplash.com/photo-1557862921-37829c790f19?w=800&q=80",
+  // Fire brigade - fire truck
+  "fire": "https://images.unsplash.com/photo-1599598177991-ec67b5c37318?w=800&q=80",
+  // Health center/clinic - medical/hospital building
+  "health": "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=800&q=80",
+  // Ferry terminal/port - ferry boat
+  "ferry": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
+  // Post office - mailbox/letters
+  "post": "https://images.unsplash.com/photo-1579532536935-619928decd08?w=800&q=80",
+  // Library - books/library interior
+  "library": "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&q=80",
+  // School - school building/classroom
   "school": "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80",
-  // Town hall/government
+  // Town hall/government - government building
   "townhall": "https://images.unsplash.com/photo-1555848962-6e79363ec58f?w=800&q=80",
-  // Fallback
-  "default": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80",
+  // Fallback - generic building
+  "default": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
 };
 
 // Map service names to appropriate image keys
