@@ -1,6 +1,6 @@
 export const MOCK_AUTH_COOKIE_NAME = "mock_auth_user";
 
-export type DemoUserRole = "SUPER_ADMIN" | "TOWN_ADMIN" | "BUSINESS_OWNER";
+export type DemoUserRole = "SUPER_ADMIN" | "TOWN_ADMIN" | "BUSINESS_OWNER" | "USER";
 
 export type DemoUserOption = {
   userId: string;
@@ -39,5 +39,14 @@ export const DEMO_USER_OPTIONS: DemoUserOption[] = [
     label: "Business Owner",
     description: "Manages a demo business and promotions.",
     redirectPath: "/admin/business",
+  },
+  {
+    userId: "demo-user",
+    email: "user@townhub.demo",
+    firstName: "Demo",
+    role: "USER",
+    label: "Regular User",
+    description: "Standard user account to test onboarding and subscriptions.",
+    redirectPath: "/stykkisholmur",
   },
 ];

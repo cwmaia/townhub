@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { UserRole } from "@prisma/client";
 import { prisma } from "../db";
 import { DEMO_USER_OPTIONS, MOCK_AUTH_COOKIE_NAME } from "./demo-users";
 
@@ -32,13 +33,17 @@ export async function getMockAuthSession(): Promise<MockAuthContext | null> {
     DEMO_USER_OPTIONS.find((user) => user.userId === defaultUserId) ??
     DEFAULT_DEMO_USER;
 
-  const profile = await prisma.profile.findUnique({
+  // Upsert the profile to ensure it exists for demo users
+  const profile = await prisma.profile.upsert({
     where: { userId: selectedUser.userId },
+    create: {
+      userId: selectedUser.userId,
+      email: selectedUser.email,
+      firstName: selectedUser.firstName,
+      role: selectedUser.role as UserRole,
+    },
+    update: {}, // Don't update if exists
   });
-
-  if (!profile) {
-    return null;
-  }
 
   const email = profile.email ?? process.env.MOCK_AUTH_EMAIL ?? selectedUser.email;
 

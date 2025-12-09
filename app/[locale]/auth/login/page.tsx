@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,7 +18,21 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
-  const mockEnabled = process.env.NEXT_PUBLIC_MOCK_AUTH === 'true';
+  const [mockEnabled, setMockEnabled] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/debug-auth')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.mockAuthEnabled) {
+          setMockEnabled(true);
+        }
+      })
+      .catch(() => {
+        // Ignore errors, mock auth remains disabled
+      });
+  }, []);
+
   const warningMessage = mockEnabled ? 'Mock auth is active — any credentials will work.' : null;
 
   const mockButtons = useMemo(

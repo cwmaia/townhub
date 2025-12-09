@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Header from "@/app/(components)/Header";
 import SettingsClient from "./SettingsClient";
 import { prisma } from "@/lib/db";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getCurrentProfile } from "@/lib/auth/guards";
 import { migratePreferences } from "@/lib/notifications/types";
 
 export const metadata: Metadata = {
@@ -17,12 +17,9 @@ export default async function SettingsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, profile: existingProfile } = await getCurrentProfile();
 
-  if (!user) {
+  if (!user || !existingProfile) {
     redirect(`/${locale}/stykkisholmur`);
   }
 
