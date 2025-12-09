@@ -193,5 +193,80 @@
     "signInHeading": "Sign in with email",
     "magicLink": "Send magic link",
     "emailPlaceholder": "your@email.com"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your profile and notification preferences",
+    "tabs": {
+      "notifications": "Notifications",
+      "subscriptions": "Subscriptions",
+      "profile": "Profile"
+    },
+    "notifications": {
+      "pushTitle": "Push Notifications",
+      "pushDescription": "Enable or disable all push notifications",
+      "alertsTitle": "Alert Types",
+      "alertsDescription": "Choose which types of alerts you want to receive",
+      "businessTitle": "Business Notifications",
+      "businessDescription": "Choose which types of businesses can send you notifications",
+      "quietHoursTitle": "Quiet Hours",
+      "quietHoursDescription": "Pause non-emergency notifications during specific hours",
+      "quietHoursNote": "Emergency alerts will still come through during quiet hours.",
+      "emergency": {
+        "title": "Emergency Alerts",
+        "description": "Critical safety notifications"
+      },
+      "town": {
+        "title": "Town Alerts",
+        "description": "Civic announcements and updates"
+      },
+      "weather": {
+        "title": "Weather & Roads",
+        "description": "Weather conditions, road status, aurora forecasts"
+      },
+      "events": {
+        "title": "Events",
+        "description": "Community events and festivals"
+      },
+      "lodging": {
+        "title": "Hotels & Stays",
+        "description": "Accommodations, guesthouses, B&Bs"
+      },
+      "restaurant": {
+        "title": "Food & Drink",
+        "description": "Restaurants, cafes, bars"
+      },
+      "attraction": {
+        "title": "Attractions",
+        "description": "Tours, museums, activities"
+      },
+      "service": {
+        "title": "Local Services",
+        "description": "Shops, utilities, town services"
+      }
+    },
+    "subscriptions": {
+      "businessTitle": "Business Subscriptions",
+      "businessDescription": "Businesses you've subscribed to for notifications",
+      "placeTitle": "Place Subscriptions",
+      "placeDescription": "Places you've subscribed to for notifications",
+      "emptyBusiness": "No business subscriptions yet",
+      "emptyPlace": "No place subscriptions yet",
+      "subscribeHint": "Subscribe to businesses to receive their updates"
+    },
+    "profile": {
+      "title": "Profile Information",
+      "description": "Update your personal information",
+      "firstName": "First name",
+      "email": "Email"
+    },
+    "actions": {
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "saved": "Settings saved successfully",
+      "error": "Failed to save settings",
+      "unsubscribe": "Unsubscribe",
+      "unsubscribed": "Unsubscribed successfully"
+    }
   }
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState, useTransition, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
@@ -27,6 +28,7 @@ import { createSupabaseBrowserClient } from "../../lib/supabase/client";
 import type { ProfileSummary } from "./types";
 import type { AppLocale } from "../../lib/i18n";
 import { UserRole } from "@prisma/client";
+import { Settings } from "lucide-react";
 
 type ProfileMenuProps = {
   profile: ProfileSummary | null;
@@ -208,6 +210,12 @@ const ProfileMenu = ({ profile, currentLocale }: ProfileMenuProps) => {
           {profile.firstName ?? "Guest"}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href={`/${currentLocale}/settings`} className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            Settings
+          </Link>
+        </DropdownMenuItem>
         {canAccessAdmin ? (
           <DropdownMenuItem
             onClick={() => {

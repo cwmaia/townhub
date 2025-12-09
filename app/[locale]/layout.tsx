@@ -5,6 +5,7 @@ import {
   setRequestLocale,
 } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Toaster } from "sonner";
 import { locales, type AppLocale } from "../../lib/i18n";
 
 type LocaleLayoutProps = {
@@ -56,6 +57,7 @@ const LocaleLayout = async ({ children, params }: LocaleLayoutProps) => {
       <div className="min-h-screen bg-background text-foreground">
         {children}
       </div>
+      <Toaster position="top-right" richColors />
     </NextIntlClientProvider>
   );
 };
