@@ -103,6 +103,7 @@ model Place {
   updatedAt               DateTime  @updatedAt
   priceRange              String?
   business                Business?
+  notificationSubscriptions PlaceNotificationSubscription[]
 }
 
 model Event {
@@ -163,6 +164,38 @@ model BusinessFavorite {
   @@unique([businessId, profileId])
 }
 
+// User's subscription to receive notifications from a specific business
+model BusinessNotificationSubscription {
+  id         String   @id @default(cuid())
+  userId     String
+  user       Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, businessId])
+  @@index([businessId])
+  @@index([userId])
+}
+
+// User's subscription to receive notifications from a specific place
+model PlaceNotificationSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  placeId   String
+  place     Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, placeId])
+  @@index([placeId])
+  @@index([userId])
+}
+
 model Profile {
   id                      String                 @id @default(cuid())
   userId                  String                 @unique
@@ -179,7 +212,10 @@ model Profile {
   eventFavorites          EventFavorite[]
   eventRSVPs              EventRSVP[]
   businessFavorites       BusinessFavorite[]
-  notificationPreferences Json?                  @default("{\"events\":true,\"promos\":true,\"townAlerts\":true,\"weatherAlerts\":true,\"businessAlerts\":true}")
+  businessNotificationSubscriptions BusinessNotificationSubscription[]
+  placeNotificationSubscriptions    PlaceNotificationSubscription[]
+  notificationPreferences Json? @default("{\"categories\":{\"townAlerts\":true,\"weatherAlerts\":true,\"events\":true,\"emergencyAlerts\":true},\"businessTypes\":{\"lodging\":true,\"restaurant\":true,\"attraction\":true,\"service\":true},\"globalEnabled\":true,\"quietHours\":{\"enabled\":false,\"start\":\"22:00\",\"end\":\"08:00\"}}")
+  onboardingCompletedAt    DateTime?
   createdAt               DateTime               @default(now())
   updatedAt               DateTime               @updatedAt
 }
@@ -220,6 +256,7 @@ model Business {
   events                   Event[]            @relation("BusinessEvents")
   claims                   BusinessClaim[]
   favorites                BusinessFavorite[]
+  notificationSubscriptions BusinessNotificationSubscription[]
   createdAt                DateTime           @default(now())
   updatedAt                DateTime           @updatedAt
 }
