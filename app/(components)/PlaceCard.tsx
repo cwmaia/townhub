@@ -5,6 +5,7 @@ import { Building2, Hotel, MapPin, Ship, Utensils } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { TownHubPlace } from "./types";
 import { Button } from "../../components/ui/button";
+import { SubscriptionBell } from "./SubscriptionBell";
 import { Badge } from "../../components/ui/badge";
 import { formatDistance } from "../../lib/geo";
 
@@ -58,6 +59,11 @@ const PlaceCard = ({ place }: PlaceCardProps) => {
                 ) : null}
               </div>
             </div>
+            <SubscriptionBell
+              placeId={place.id}
+              placeName={place.name}
+              size="md"
+            />
           </div>
           <p className="line-clamp-3 text-sm leading-relaxed text-slate-600">
             {place.description}
