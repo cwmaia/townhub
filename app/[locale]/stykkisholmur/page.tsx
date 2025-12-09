@@ -5,6 +5,7 @@ import type { DestinationEstimate } from "../../(components)/FromHereToDialog";
 import type { ProfileSummary, TownCenter } from "../../(components)/types";
 import { prisma } from "../../../lib/db";
 import { createSupabaseServerClient } from "../../../lib/supabase/server";
+import { getCurrentProfile } from "../../../lib/auth/guards";
 import { getWeatherForecast } from "../../../lib/weather";
 import { fetchAuroraForecast } from "../../../lib/aurora";
 import { getStaticMapUrl, distanceMatrix } from "../../../lib/google";
@@ -72,16 +73,10 @@ const fetchDestinations = async (center: TownCenter): Promise<DestinationEstimat
 };
 
 const getProfile = async (): Promise<ProfileSummary | null> => {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Use getCurrentProfile which handles mock auth
+  const { user, profile: existing } = await getCurrentProfile();
 
   if (!user) return null;
-
-  const existing = await prisma.profile.findUnique({
-    where: { userId: user.id },
-  });
 
   if (existing) {
     return {
@@ -91,6 +86,7 @@ const getProfile = async (): Promise<ProfileSummary | null> => {
     };
   }
 
+  // Create profile for new users (real Supabase users, not mock)
   const firstName =
     (user.user_metadata?.full_name as string | undefined)?.split(" ")[0] ??
     user.email?.split("@")[0] ??
