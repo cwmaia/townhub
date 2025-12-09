@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { prisma } from "../db";
 import { DEMO_USER_OPTIONS, MOCK_AUTH_COOKIE_NAME } from "./demo-users";
 
-const MOCK_AUTH_ENABLED = process.env.MOCK_AUTH === "true";
+const MOCK_AUTH_ENABLED = process.env.MOCK_AUTH?.trim() === "true";
 const DEFAULT_DEMO_USER = DEMO_USER_OPTIONS[0];
 
 export type MockAuthContext = {
