@@ -22,7 +22,7 @@ const BUSINESS_TIERS = [
     price: 0,
     notificationLimit: 0,
     eventLimit: 1,
-    description: "Basic listing for businesses that aren’t yet subscribed.",
+    description: "Basic listing for businesses that aren't yet subscribed.",
     features: {
       highlights: ["Directory listing", "1 event/month"],
     },
@@ -31,26 +31,26 @@ const BUSINESS_TIERS = [
   {
     slug: "starter",
     name: "Starter",
-    price: 7500,
-    notificationLimit: 2,
-    eventLimit: 2,
-    description: "Perfect for small businesses that need occasional visibility.",
+    price: 9900,
+    notificationLimit: 4,
+    eventLimit: 3,
+    description: "Perfect for small businesses needing weekly visibility.",
     features: {
-      highlights: ["2 pushes/month", "2 events/month", "Basic analytics"],
+      highlights: ["4 pushes/month", "3 events/month", "Basic analytics"],
     },
     priority: 1,
   },
   {
     slug: "growth",
     name: "Growth",
-    price: 15000,
-    notificationLimit: 8,
-    eventLimit: 6,
-    description: "Great for growing businesses that run recurring promotions.",
+    price: 19900,
+    notificationLimit: 12,
+    eventLimit: 8,
+    description: "Great for growing businesses running regular promotions.",
     features: {
       highlights: [
-        "8 pushes/month",
-        "6 events/month",
+        "12 pushes/month",
+        "8 events/month",
         "Featured placement",
         "Engagement analytics",
       ],
@@ -60,13 +60,13 @@ const BUSINESS_TIERS = [
   {
     slug: "premium",
     name: "Premium",
-    price: 29000,
-    notificationLimit: 20,
+    price: 39900,
+    notificationLimit: 30,
     eventLimit: null,
     description: "Full control with segmentation, scheduling, and priority support.",
     features: {
       highlights: [
-        "20 pushes/month",
+        "30 pushes/month",
         "Unlimited events",
         "Audience segmentation",
         "Scheduling",
@@ -77,10 +77,29 @@ const BUSINESS_TIERS = [
   },
 ];
 
+const TOWN_TIER = {
+  slug: "town-standard",
+  name: "Town Standard",
+  price: 250000,
+  notificationLimit: 50,
+  eventLimit: 20,
+  description: "Standard town package with 50 notifications and 20 events per month.",
+  features: {
+    highlights: [
+      "50 push notifications/month",
+      "20 town events/month",
+      "Weather & emergency alerts",
+      "Citizen engagement analytics",
+      "Multi-language support",
+    ],
+  },
+  priority: 1,
+};
+
 const DEFAULT_TOWN = {
   name: "Stykkishólmur",
   slug: "stykkisholmur",
-  licenseFee: 95000,
+  licenseFee: 250000,
 };
 
 async function main() {
@@ -91,6 +110,9 @@ async function main() {
     update: {
       latitude: townCenter.lat,
       longitude: townCenter.lng,
+      monthlyNotificationLimit: 50,
+      monthlyEventLimit: 20,
+      licenseFee: 250000,
     },
     create: {
       name: DEFAULT_TOWN.name,
@@ -99,6 +121,9 @@ async function main() {
       latitude: townCenter.lat,
       longitude: townCenter.lng,
       defaultLocale: "is",
+      monthlyNotificationLimit: 50,
+      monthlyEventLimit: 20,
+      usageResetsAt: new Date(),
     },
   });
 
@@ -174,6 +199,37 @@ async function main() {
       },
     });
   }
+
+  console.info("Upserting town tier…");
+  await prisma.subscription.upsert({
+    where: { slug: TOWN_TIER.slug },
+    update: {
+      name: TOWN_TIER.name,
+      price: TOWN_TIER.price,
+      currency: "ISK",
+      billingPeriod: "monthly",
+      notificationLimit: TOWN_TIER.notificationLimit,
+      eventLimit: TOWN_TIER.eventLimit,
+      description: TOWN_TIER.description,
+      features: TOWN_TIER.features,
+      target: SubscriptionTarget.TOWN,
+      priority: TOWN_TIER.priority,
+      isActive: true,
+    },
+    create: {
+      slug: TOWN_TIER.slug,
+      name: TOWN_TIER.name,
+      price: TOWN_TIER.price,
+      currency: "ISK",
+      billingPeriod: "monthly",
+      notificationLimit: TOWN_TIER.notificationLimit,
+      eventLimit: TOWN_TIER.eventLimit,
+      description: TOWN_TIER.description,
+      features: TOWN_TIER.features,
+      target: SubscriptionTarget.TOWN,
+      priority: TOWN_TIER.priority,
+    },
+  });
 
   if (ADMIN_EMAILS.length > 0) {
     console.info("Ensuring super admin profiles exist…");

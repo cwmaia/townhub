@@ -1,16 +1,20 @@
 import "server-only";
 
 import { redirect, notFound } from "next/navigation";
+import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { UserRole } from "@prisma/client";
 import { locales, type AppLocale } from "@/lib/i18n";
 import { prisma } from "@/lib/db";
-import { requireRole } from "@/lib/auth/guards";
+import { getCurrentProfile, requireRole } from "@/lib/auth/guards";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { BusinessQuickActions } from "@/components/BusinessQuickActions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Bell, Calendar, Users } from "lucide-react";
+import { BusinessNotificationCard } from "@/components/admin/BusinessNotificationCard";
+import { NotificationHistory } from "@/components/admin/NotificationHistory";
 
 type BusinessPageProps = {
   params: Promise<{ locale: AppLocale }>;
@@ -49,7 +53,7 @@ export default async function BusinessDashboardPage({ params }: BusinessPageProp
     redirect(`/${locale}`);
   }
 
-  const [eventsCount, followersCount, upcomingEvents] = await Promise.all([
+  const [eventsCount, followersCount, upcomingEvents, recentNotifications] = await Promise.all([
     prisma.event.count({ where: { businessId: business.id } }),
     prisma.businessFavorite.count({ where: { businessId: business.id } }),
     prisma.event.findMany({
@@ -57,6 +61,21 @@ export default async function BusinessDashboardPage({ params }: BusinessPageProp
       orderBy: { startsAt: { sort: "asc", nulls: "last" } },
       take: 3,
       select: { id: true, title: true, startsAt: true, location: true },
+    }),
+    prisma.notification.findMany({
+      where: { businessId: business.id },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+      select: {
+        id: true,
+        title: true,
+        body: true,
+        type: true,
+        status: true,
+        sentAt: true,
+        audienceCount: true,
+        deliveryCount: true,
+      },
     }),
   ]);
 
@@ -74,6 +93,54 @@ export default async function BusinessDashboardPage({ params }: BusinessPageProp
 
   const tierName = business.subscription?.name ?? "Free";
   const isPremiumTier = (business.subscription?.priority ?? 0) >= 3;
+
+  const notificationQuota = {
+    allowed: notificationLimit === null ? true : (business.notificationUsage ?? 0) < notificationLimit,
+    used: business.notificationUsage ?? 0,
+    limit: notificationLimit === 0 ? 0 : notificationLimit === undefined ? null : notificationLimit,
+    remaining:
+      notificationLimit === null
+        ? null
+        : Math.max(0, (notificationLimit ?? 0) - (business.notificationUsage ?? 0)),
+  };
+
+  const sendBusinessNotificationAction = async (data: {
+    title: string;
+    body: string;
+    type: string;
+  }) => {
+    "use server";
+
+    const auth = await getCurrentProfile();
+    if (!auth.profile) {
+      throw new Error("Not authenticated");
+    }
+
+    const cookie = headers().get("cookie") ?? "";
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.APP_URL ?? "";
+    const url = baseUrl ? `${baseUrl}/api/notifications/send` : "/api/notifications/send";
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        cookie,
+      },
+      body: JSON.stringify({
+        title: data.title,
+        body: data.body,
+        type: data.type,
+        targetType: "BUSINESS_SUBSCRIBERS",
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error ?? "Failed to send notification");
+    }
+
+    revalidatePath(`/${locale}/admin/business`);
+  };
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -140,6 +207,26 @@ export default async function BusinessDashboardPage({ params }: BusinessPageProp
             <Badge variant="outline">Demo</Badge>
           </div>
           <BusinessQuickActions />
+        </section>
+
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-semibold text-slate-900">Notifications</h3>
+              <p className="text-sm text-slate-500">
+                Send updates to your subscribers and track delivery performance.
+              </p>
+            </div>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <BusinessNotificationCard
+              businessId={business.id}
+              businessName={business.name}
+              quota={notificationQuota}
+              onSend={sendBusinessNotificationAction}
+            />
+            <NotificationHistory notifications={recentNotifications} />
+          </div>
         </section>
 
         {!isPremiumTier && (

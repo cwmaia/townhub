@@ -66,6 +66,11 @@ model Town {
   notifications Notification[]
   invoices      Invoice[]
   segments      NotificationSegment[]
+  monthlyNotificationLimit Int?      @default(50)
+  monthlyEventLimit        Int?      @default(20)
+  notificationUsage        Int       @default(0)
+  eventUsage               Int       @default(0)
+  usageResetsAt            DateTime?
 }
 
 model Place {
