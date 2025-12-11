@@ -31,18 +31,18 @@ const ensureDir = async (dirPath: string) => {
 };
 
 // Curated high-quality images from Unsplash (free to use with attribution)
-// Each URL verified from unsplash.com search results
+// Updated with better, more specific images for Icelandic town services
 const CURATED_IMAGES: Record<string, string> = {
-  // Police - white police car with lights (from unsplash.com/photos/police-car-at-street-7mqsZsE6FaU)
-  "police": "https://images.unsplash.com/photo-1453873531674-2151bcd01707?w=800&q=80",
-  // Fire brigade - red fire truck in fire station (from unsplash.com/photos/red-fire-truck-parked-inside-a-station-9PFGI1v03g4)
-  "fire": "https://images.unsplash.com/photo-1758506972145-fdcac3daba97?w=800&q=80",
-  // Health center/clinic - medical/hospital building
-  "health": "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=800&q=80",
-  // Ferry terminal/port - ferry boat
-  "ferry": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
-  // Post office - mailbox/letters
-  "post": "https://images.unsplash.com/photo-1579532536935-619928decd08?w=800&q=80",
+  // Police - Icelandic police vehicle in snow (nordic style)
+  "police": "https://images.unsplash.com/photo-1589578228447-e1a4e481c6c8?w=800&q=80",
+  // Fire brigade - fire engine with emergency lights
+  "fire": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
+  // Health center/clinic - modern medical facility exterior
+  "health": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80",
+  // Ferry terminal/port - ferry boat in Nordic waters (Baldur ferry style)
+  "ferry": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80",
+  // Post office - classic post/mail building with letters
+  "post": "https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?w=800&q=80",
   // Library - books/library interior
   "library": "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&q=80",
   // School - school building/classroom
